@@ -1,0 +1,252 @@
+/* utilities */
+.pull-left {
+  float: left;
+}
+.sr-only {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
+}
+.hide {
+    display: none;
+}
+.show-inline {
+  display: inline-block;
+}
+
+/* containers */
+.px-video-img-captions-container * {
+  box-sizing: border-box;
+}
+
+.px-video-img-captions-container {
+  position: relative;
+}
+
+/* progress indicator */
+.px-video-progress {
+  width: 100%;
+  height: 10px;
+}
+.px-video-progress[value] {
+  /* Reset the default appearance */
+  -webkit-appearance: none;
+  border: none;
+}
+.px-video-progress[value]::-webkit-progress-bar {
+  background-color: #E6E6E6;
+}
+.px-video-progress[value]::-webkit-progress-value {
+  background-color: #009CDF;
+}
+
+/* time */
+.px-video-time {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  float: right;
+  margin-top: 2px;
+  font-size: 14px;
+}
+
+/* caption area */
+.px-video-captions {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: .5em;
+  min-height: 2.5em;
+  background-color: #000;
+  color: #fff;
+  font-size: 1.1em;
+  text-align: center;
+  opacity: 0.75;
+}
+
+/* buttons */
+.px-video-controls {
+  button {
+    cursor: pointer;
+    border: 1px #fff solid;
+    background: transparent;
+    padding: 0;
+    margin: 0 5px;
+    width: 25px;
+    height: 20px;
+    overflow: hidden;
+    background: no-repeat url('../video/stories/px-video-sprite.png');
+  
+    &:focus {
+      border: 1px #999 dotted;
+      outline: none;
+    }
+  }
+
+  /* volume range input */
+  input[type='range'] {
+    -webkit-appearance: none;
+    height: 6px;
+    width: 100px;
+    margin-top: 8px;
+    background-color: #E6E6E6;
+    outline:none;
+
+    &:focus::-webkit-slider-thumb {
+      outline: 1px #999 dotted;
+    }
+
+    &::-moz-range-track {
+      -moz-appearance: none;
+      height: 6px;
+      background-color: #E6E6E6;
+      border: none;
+    }
+
+    &::-moz-range-thumb {
+      height: 12px;
+      width: 8px;
+    }
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none !important;
+      height: 10px;
+      width: 6px;
+      background-color: #666;
+    }
+  }
+  
+  /* restart button */
+  button.px-video-restart {
+    background-position: -9px -333px;
+
+    &:hover,
+    &:focus {
+      background-position: -9px -297px;
+    }
+  }
+
+  /* rewind button */
+  button.px-video-rewind {
+    background-position: -11px -189px;
+    
+    &:hover, 
+    &:focus {
+      background-position: -11px -153px;
+    }
+  }
+
+  /* play button */
+  button.px-video-play {
+    background-position: -11px -45px;
+    
+    &:hover,
+    &:focus {
+      background-position: -11px -9px;
+    }
+  }
+
+  button.px-video-pause {
+    background-position: -11px -117px;
+
+    &:hover,
+    &:focus {
+      background-position: -11px -81px;
+    }
+  }
+
+  button.px-video-forward {
+    background-position: -13px -261px;
+
+    &:hover,
+    &:focus {
+      background-position: -13px -225px;
+    }
+  }
+}
+
+/* captions button */
+.px-video-captions-btn-container {
+
+  label {
+    display: inline-block;
+    width: 25px;
+    height: 20px;
+    margin-left: 25px;
+    background: no-repeat url('../video/stories/px-video-sprite.png');
+    background-position: -6px -835px;
+  }
+
+  input[type="checkbox"] {
+    
+    &:focus+label {
+      outline: 1px #999 dotted;
+      background-position: -6px -799px;
+    }
+
+    &:hover+label {
+      background-position: -6px -799px;
+      cursor: pointer;
+    }
+    
+    &:checked+label {
+      background-position: -6px -871px;
+    }
+  }
+}
+
+/* mute button */
+.px-video-mute-btn-container {
+
+  label {
+    display: inline-block;
+    width: 25px;
+    height: 20px;
+    margin-left: 240px;
+    margin-top: 2px;
+    background: no-repeat url('../video/stories/px-video-sprite.png');
+    background-position: -6px -476px;
+  }
+
+  input[type="checkbox"] {
+    &:focus+label {
+      outline: 1px #999 dotted;
+      background-position: -6px -440px;
+    }
+    
+    &:hover+label {
+      background-position: -6px -440px;
+      cursor: pointer;
+    }
+
+    /* checked state of mute button */
+    &:checked+label {
+      background-position: -6px -692px;
+    }
+
+    &:checked:hover+label,
+    &:checked:focus+label {
+      background-position: -6px -656px;
+    }
+  }
+}
+
+/* fixing display for IE10+ */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .px-video-controls input[type='range'] {
+    position: relative;
+    padding: 0;
+    height: 8px;
+    top: -3px;
+  }
+  .px-video-time {
+    margin-top: 4px;
+  }
+  .px-video-captions {
+    padding: 8px;
+    min-height: 36px;
+  }
+}
