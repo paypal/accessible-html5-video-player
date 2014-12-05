@@ -1,73 +1,79 @@
-/* utilities */
+// Utilites
 .pull-left {
   float: left;
 }
+
 .sr-only {
-  position: absolute !important;
   clip: rect(1px, 1px, 1px, 1px);
   padding: 0 !important;
   border: 0 !important;
   height: 1px !important;
   width: 1px !important;
   overflow: hidden;
+  position: absolute !important;
 }
+
 .hide {
-    display: none;
+  display: none;
 }
+
 .show-inline {
   display: inline-block;
 }
 
-/* containers */
-.px-video-img-captions-container * {
-  box-sizing: border-box;
-}
-
+// containers
 .px-video-img-captions-container {
   position: relative;
+
+  * {
+    box-sizing: border-box;
+  }
 }
 
-/* progress indicator */
+// progress indicator
 .px-video-progress {
-  width: 100%;
   height: 10px;
+  width: 100%;
 }
+
 .px-video-progress[value] {
-  /* Reset the default appearance */
+  // Reset the default appearance
   -webkit-appearance: none;
-  border: none;
+  border: 0;
 }
+
 .px-video-progress[value]::-webkit-progress-bar {
-  background-color: #E6E6E6;
+  background-color: #e6e6e6;
 }
+
 .px-video-progress[value]::-webkit-progress-value {
-  background-color: #009CDF;
+  background-color: #009cdf;
 }
 
-/* time */
+// time 
 .px-video-time {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   float: right;
-  margin-top: 2px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
+  margin-top: 2px;
 }
 
-/* caption area */
+// caption area
 .px-video-captions {
+  min-height: 2.5em;
+  width: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
   padding: .5em;
-  min-height: 2.5em;
   background-color: #000;
   color: #fff;
   font-size: 1.1em;
   text-align: center;
-  opacity: 0.75;
+  opacity: .75;
 }
 
-/* buttons */
+// buttons
 .px-video-controls {
   button {
     cursor: pointer;
@@ -80,20 +86,68 @@
     overflow: hidden;
     background: no-repeat url('../video/stories/px-video-sprite.png');
   
+    // restart button
+    .px-video-restart {
+      background-position: -9px -333px;
+
+      &:hover,
+      &:focus {
+        background-position: -9px -297px;
+      }
+    }
+
+    // rewind button
+    .px-video-rewind {
+      background-position: -11px -189px;
+      
+      &:hover, 
+      &:focus {
+        background-position: -11px -153px;
+      }
+    }
+
+    // play button 
+    .px-video-play {
+      background-position: -11px -45px;
+      
+      &:hover,
+      &:focus {
+        background-position: -11px -9px;
+      }
+    }
+
+    .px-video-pause {
+      background-position: -11px -117px;
+
+      &:hover,
+      &:focus {
+        background-position: -11px -81px;
+      }
+    }
+
+    .px-video-forward {
+      background-position: -13px -261px;
+
+      &:hover,
+      &:focus {
+        background-position: -13px -225px;
+      }
+    }
+
     &:focus {
       border: 1px #999 dotted;
       outline: none;
     }
   }
 
-  /* volume range input */
+  // volume range input
   input[type='range'] {
     -webkit-appearance: none;
     height: 6px;
     width: 100px;
     margin-top: 8px;
-    background-color: #E6E6E6;
-    outline:none;
+    background-color: #e6e6e6;
+    outline: none;
 
     &:focus::-webkit-slider-thumb {
       outline: 1px #999 dotted;
@@ -102,8 +156,8 @@
     &::-moz-range-track {
       -moz-appearance: none;
       height: 6px;
-      background-color: #E6E6E6;
-      border: none;
+      background-color: #e6e6e6;
+      border: 0;
     }
 
     &::-moz-range-thumb {
@@ -118,57 +172,9 @@
       background-color: #666;
     }
   }
-  
-  /* restart button */
-  button.px-video-restart {
-    background-position: -9px -333px;
-
-    &:hover,
-    &:focus {
-      background-position: -9px -297px;
-    }
-  }
-
-  /* rewind button */
-  button.px-video-rewind {
-    background-position: -11px -189px;
-    
-    &:hover, 
-    &:focus {
-      background-position: -11px -153px;
-    }
-  }
-
-  /* play button */
-  button.px-video-play {
-    background-position: -11px -45px;
-    
-    &:hover,
-    &:focus {
-      background-position: -11px -9px;
-    }
-  }
-
-  button.px-video-pause {
-    background-position: -11px -117px;
-
-    &:hover,
-    &:focus {
-      background-position: -11px -81px;
-    }
-  }
-
-  button.px-video-forward {
-    background-position: -13px -261px;
-
-    &:hover,
-    &:focus {
-      background-position: -13px -225px;
-    }
-  }
 }
 
-/* captions button */
+// captions button
 .px-video-captions-btn-container {
 
   label {
@@ -198,7 +204,7 @@
   }
 }
 
-/* mute button */
+// mute button 
 .px-video-mute-btn-container {
 
   label {
@@ -222,7 +228,7 @@
       cursor: pointer;
     }
 
-    /* checked state of mute button */
+    // checked state of mute button 
     &:checked+label {
       background-position: -6px -692px;
     }
@@ -234,7 +240,7 @@
   }
 }
 
-/* fixing display for IE10+ */
+// fixing display for IE10+ 
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .px-video-controls input[type='range'] {
     position: relative;
@@ -242,9 +248,11 @@
     height: 8px;
     top: -3px;
   }
+
   .px-video-time {
     margin-top: 4px;
   }
+
   .px-video-captions {
     padding: 8px;
     min-height: 36px;
