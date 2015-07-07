@@ -250,6 +250,9 @@ function InitPxVideo(options) {
 	// Adjust layout per width of video - controls/mute offset
 	obj.labelMute = document.getElementById("labelMute" + obj.randomNum);
 	obj.labelMuteOffset = obj.movieWidth - 390;
+	if (obj.browserName==="Firefox") { // adjust for Firefox rendering
+		obj.labelMuteOffset = obj.labelMuteOffset - 10;
+	}
 	if (obj.labelMuteOffset < 0) {
 		obj.labelMuteOffset = 0;
 	}

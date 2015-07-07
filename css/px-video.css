@@ -242,6 +242,7 @@
 .px-video-controls input[type='range']::-moz-range-thumb {
 	height: 12px;
 	width: 8px;
+	background-color: #666;
 }
 /* fixing display for IE10+ */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
