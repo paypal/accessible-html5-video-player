@@ -560,7 +560,7 @@ function InitPxVideo(options) {
 				if (track.kind === "captions") {
 					track.addEventListener("cuechange",function() {
 						if (this.activeCues[0]) {
-							if (this.activeCues[0].hasOwnProperty("text")) {
+							if (this.activeCues[0].hasOwnProperty("text") || this.activeCues[0].text !== "") {
 								obj.captionsContainer.innerHTML = this.activeCues[0].text;
 							}
 						}
