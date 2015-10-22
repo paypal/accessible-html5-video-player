@@ -90,6 +90,7 @@
 /* restart button */
 .px-video-controls button.px-video-restart {
 	background-position: -6px -333px;
+	margin-left: 0;
 }
 .px-video-controls button.px-video-restart:hover,
 .px-video-controls button.px-video-restart:focus {
