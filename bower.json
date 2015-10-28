@@ -1,0 +1,26 @@
+{
+  "name": "accessible-html5-video-player",
+  "version": "0.1.0",
+  "homepage": "https://github.com/paypal/accessible-html5-video-player",
+  "authors": [
+    "hozefarules@gmail.com"
+  ],
+  "description": "Accessible HTML5 Video Player",
+  "main": "js/px-video.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "html5",
+    "video",
+    "accessible"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
