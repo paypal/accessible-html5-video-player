@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "homepage": "https://github.com/paypal/accessible-html5-video-player",
   "authors": [
-    "hozefarules@gmail.com"
+    "weboverhauls@gmail.com"
   ],
   "description": "Accessible HTML5 Video Player",
   "main": "js/px-video.js",
