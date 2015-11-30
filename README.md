@@ -15,7 +15,7 @@ A lightweight HTML5 video player which includes support for captions and screen 
 - Accessible to keyboard-only users and screen reader users.
 - Option provided to set captions on or off by default (upon loading).
 - Option provided to set number of seconds by which to rewind and forward.
-- The width adjusts to the width of the video element.
+- Text strings for the controls are externalized to allow for internationalization (fall 2015).
 - No dependencies. Written in "vanilla" JavaScript.
 - When JavaScript is unavailable, the browser's native controls are used.
 
@@ -50,7 +50,7 @@ Insert the HTML5 video markup in the Body of your HTML document. Replace the vid
 ```
 
 ###JavaScript
-Insert the JavaScript file right before the closing Body element of your HTML document. Add a Script element to initialize the video. Options are passed in JSON format. The options are:
+Insert two JavaScript files right before the closing Body element of your HTML document. Add a Script element to initialize the video. Options are passed in JSON format. The options are:
 
 - videoId: the value of the ID of the widget container (string) [required]
 - captionsOnDefault: denotes whether to show or hide caption upon loading (boolean) [optional, default is true]
@@ -59,6 +59,7 @@ Insert the JavaScript file right before the closing Body element of your HTML do
 - debug: turn console logs on or off (boolean) [optional, default is false]
 
 ```html
+<script src="js/strings.js"></script>
 <script src="js/px-video.js"></script>
 <script>
 // Initialize
@@ -81,6 +82,7 @@ If you experience any errors or if you have ideas for improvement, please feel f
 You can also follow and contact the PayPal Accessibility team on Twitter: [@PayPalInclusive](https://twitter.com/paypalinclusive)
 
 ## Authors
+The original authors of this project are:
 - Dennis Lembree, primary developer || [https://github.com/weboverhauls](https://github.com/weboverhauls) || [@dennisl](https://twitter.com/dennisl)
 - Victor Tsaran, consultation and testing || [https://github.com/vick08](https://github.com/vick08) || [@vick08](https://twitter.com/vick08)
 - Jason Gabriele, consultation
