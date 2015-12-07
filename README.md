@@ -106,7 +106,7 @@ The original authors of this project are:
 - [HTML5 Video Events and API](http://www.w3.org/2010/05/video/mediaevents.html) - by W3C
 - [Adding captions and subtitles to HTML5 video](https://developer.mozilla.org/en-US/Apps/Build/Audio_and_video_delivery/Adding_captions_and_subtitles_to_HTML5_video#Internet_Explorer) - by MDN
 - [Simple SubRip to WebVTT converter](https://atelier.u-sub.net/srt2vtt/) - tool to convert SRT captions to WebVTT
-- [Able Player](https://github.com/terrill/ableplayer) - accessible cross-browser media player by Terrill Thompson
+- [Able Player](https://github.com/ableplayer/ableplayer) - accessible cross-browser media player by Terrill Thompson
 
 ## Copyright and License
 Copyright 2014, eBay Software Foundation under [the BSD license](LICENSE.md).
