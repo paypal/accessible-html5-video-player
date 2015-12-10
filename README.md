@@ -109,5 +109,5 @@ The original authors of this project are:
 - [Able Player](https://github.com/ableplayer/ableplayer) - accessible cross-browser media player by Terrill Thompson
 
 ## Copyright and License
-Copyright 2014, eBay Software Foundation under [the BSD license](LICENSE.md).
+Copyright 2014, PayPal under [the BSD license](LICENSE.md).
 
