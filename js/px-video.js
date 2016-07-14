@@ -153,6 +153,25 @@ function InitPxVideo(options) {
     exitFullScreen.call(document);
 	}
 
+	// insert aria announce div
+	(function() {
+		var div = document.createElement('div');
+		div.id = 'px-video-aria-announce';
+		div.setAttribute('role', 'alert');
+		div.setAttribute('aria-atomic', 'true');
+		div.style.overflow = "hidden";
+		div.style.textIndent = '-999999px';
+		document.body.appendChild(div);
+	}());
+
+	// announce things to aria
+	function ariaAnnounce(msg) {
+		var announce = document.getElementById('px-video-aria-announce');
+		if (announce) {
+			announce.innerHTML = '<p>' + msg + '</p>';
+		} 
+	}
+
 	// Global variable
 	var obj = {};
 
@@ -372,6 +391,11 @@ function InitPxVideo(options) {
 		if (!obj.isTextTracks) {
 			adjustManualCaptions(obj);
 		}
+
+		// we do not need to announce negative times
+		var announcePos = Math.round(targetTime) > 0 ? Math.round(targetTime) : 0;
+		var announceMsg = 'rewind to ' + announcePos + ' seconds';
+		ariaAnnounce(announceMsg);
 	}, false);
 
 	// Fast forward
@@ -387,6 +411,9 @@ function InitPxVideo(options) {
 		if (!obj.isTextTracks) {
 			adjustManualCaptions(obj);
 		}
+
+		var announceMsg = 'forward to ' + Math.round(targetTime) + ' seconds';
+		ariaAnnounce(announceMsg);
 	}, false);
 
 	// Get the HTML5 range input element and append audio volume adjustment on change
