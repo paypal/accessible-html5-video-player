@@ -2,6 +2,39 @@ function InitPxVideo(options) {
 
 	"use strict";
 
+	// Utility function to convert seconds to formatted time
+	function getTimeFromSeconds(seconds){
+		var hh=0, mm=0, ss=0, t="";
+
+		if (seconds > 0){
+			// Multiply by 1000 because Date() requires miliseconds
+			var date = new Date(seconds * 1000);
+			hh = date.getUTCHours();
+			mm = date.getUTCMinutes();
+			ss = date.getSeconds();
+		}
+
+		// Make sure there are two-digits
+		if (hh != 0) {
+			if (hh < 10) {
+				t += "0"+ hh + ":";
+			} else {
+				t += hh + ":";
+			}
+		}
+		if (mm < 10) {
+			t += "0"+ mm + ":";
+		} else {
+			t += mm + ":";
+		}
+		if (ss < 10) {
+			t += "0" + ss;
+		} else {
+			t += ss;
+		}
+
+		return t;
+	}
 	// Utilities for caption time codes
 	function video_timecode_min(tc) {
 		var tcpair = [];
@@ -253,6 +286,9 @@ function InitPxVideo(options) {
 			'</div>' +
 		'</div>' +
 		'<div>' +
+			'<div class="px-timetip hide">' +
+
+			'</div>' +
 			'<progress class="px-video-progress" max="100" value="0"><span>0</span>% played</progress>' +
 		'</div>';
 
@@ -334,6 +370,7 @@ function InitPxVideo(options) {
 	obj.txtSeconds = obj.container.getElementsByClassName('px-seconds');
 	obj.fullScreenBtn = obj.container.getElementsByClassName('px-video-btnFullScreen')[0];
 	obj.fullScreenBtnContainer = obj.container.getElementsByClassName('px-video-fullscreen-btn-container')[0];
+	obj.progressBarHoverContainer = obj.container.getElementsByClassName('px-timetip')[0];
 
 	// Update number of seconds in rewind and fast forward buttons
 	obj.txtSeconds[0].innerHTML = obj.seekInterval;
@@ -482,6 +519,24 @@ function InitPxVideo(options) {
 		}
 	});
 
+	// Show skip-to time when hovering on the progress bar
+	obj.progressBar.addEventListener('mousemove', function(e) {
+		obj.pos = (e.pageX - this.offsetLeft) / this.offsetWidth;
+
+		var seconds = obj.pos * obj.movie.duration;
+		var time = getTimeFromSeconds(seconds);
+
+		obj.progressBarHoverContainer.innerHTML = time;
+		obj.progressBarHoverContainer.style.position = "absolute";
+		obj.progressBarHoverContainer.style.left = (e.pageX - (this.offsetLeft / 2.5) )+"px";
+		obj.progressBarHoverContainer.classList.remove("hide");
+	});
+
+	// Hide skip-to time when moving the mouse out of the progress bar
+	obj.progressBar.addEventListener('mouseout', function(e) {
+		obj.progressBarHoverContainer.classList.add("hide");
+	});
+	
 	// Toggle display of fullscreen button
 	obj.fullScreenBtn.addEventListener('click', function() {
 		if (this.checked) {

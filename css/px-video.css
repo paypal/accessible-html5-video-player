@@ -287,3 +287,27 @@
 	font-size: 2.5em;
 	padding: 1em;
 }
+
+.px-timetip {
+	padding: 5px 10px;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 14px;
+	background: rgba(0,0,0,0.83);
+	border-radius: 3px;
+	color: #fff;
+	width: auto;
+}
+.px-timetip:after {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(43, 43, 43, 0);
+	border-top-color: #2b2b2b;
+	border-width: 10px;
+	margin-left: -10px;
+}
