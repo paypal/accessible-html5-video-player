@@ -528,7 +528,7 @@ function InitPxVideo(options) {
 
 		obj.progressBarHoverContainer.innerHTML = time;
 		obj.progressBarHoverContainer.style.position = "absolute";
-		obj.progressBarHoverContainer.style.left = (e.pageX - (this.offsetLeft / 2.5) )+"px";
+		obj.progressBarHoverContainer.style.left = (e.pageX - 25)+"px";
 		obj.progressBarHoverContainer.classList.remove("hide");
 	});
 
