@@ -108,6 +108,10 @@ The original authors of this project are:
 - [Simple SubRip to WebVTT converter](https://atelier.u-sub.net/srt2vtt/) - tool to convert SRT captions to WebVTT
 - [Able Player](https://github.com/ableplayer/ableplayer) - accessible cross-browser media player by Terrill Thompson
 
+### Projects influenced by the PayPal Accessible HTML5 Video Player
+- [Universal Video Player](https://source.ind.ie/project/video-player) - by Ind.ie, @LauraKalbag
+- [Plyr](https://github.com/selz/plyr) - by @sam_potts, @selz
+
 ## Copyright and License
 Copyright 2014, PayPal under [the BSD license](LICENSE.md).
 
