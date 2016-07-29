@@ -658,7 +658,7 @@ function InitPxVideo(options) {
 	  fullScreenStyles();
 	}, false);
 
-	document.addEventListener("msfullscreenchange", function () {
+	document.addEventListener("MSFullscreenChange", function () {
 	 	fullScreenStyles();
 	}, false);
 };
