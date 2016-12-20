@@ -1,12 +1,12 @@
 {
   "name": "accessible-html5-video-player",
-  "version": "1.0.3",
+  "version": "1.0.3 ",
   "description": "A lightweight HTML5 video player which includes support for captions and screen reader accessibility.",
   "repository": {
     "type": "git",
     "url": "https://github.com/paypal/accessible-html5-video-player"
   },  
-  "main": "index.js",
+  "main": "js/px-video.js",
   "directories": {
     "test": "test"
   },

@@ -1,11 +1,11 @@
 {
   "name": "accessible-html5-video-player",
-  "version": "0.1.1",
+  "version": "1.0.3 ",
   "homepage": "https://github.com/paypal/accessible-html5-video-player",
   "authors": [
     "weboverhauls@gmail.com"
   ],
-  "description": "Accessible HTML5 Video Player",
+  "description": "A lightweight HTML5 video player which includes support for captions and screen reader accessibility.",
   "main": "js/px-video.js",
   "moduleType": [
     "globals"
@@ -15,7 +15,7 @@
     "video",
     "accessible"
   ],
-  "license": "MIT",
+ "license": "BSD",
   "ignore": [
     "**/.*",
     "node_modules",
