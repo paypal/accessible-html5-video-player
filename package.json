@@ -1,0 +1,36 @@
+{
+  "name": "accessible-html5-video-player",
+  "version": "1.0.3",
+  "description": "A lightweight HTML5 video player which includes support for captions and screen reader accessibility.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paypal/accessible-html5-video-player"
+  },  
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": [
+    "html5",
+    "accessible",
+    "video",
+    "player"
+  ],
+  "author": "weboverhauls@gmail.com",
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "https://github.com/paypal/accessible-html5-video-player/blob/master/LICENSE.md"
+    }
+  ],
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/paypal/accessible-html5-video-player/issues"
+  },
+  "homepage": "https://github.com/paypal/accessible-html5-video-player#readme",
+ "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
