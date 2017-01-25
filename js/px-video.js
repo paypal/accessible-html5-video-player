@@ -696,11 +696,11 @@ function InitPxVideo(options) {
 							var records = [],
 								record,
 								req = xhr.responseText;
-							records = req.split('\n\n');
+							records = req.split(/\r?\n\r?\n/);
 							for (var r=0; r < records.length; r++) {
 								record = records[r];
 								obj.captions[r] = [];
-								obj.captions[r] = record.split('\n');
+								obj.captions[r] = record.split(/\r\n?|\n/);
 							}
 							// Remove first element ("VTT")
 							obj.captions.shift();
