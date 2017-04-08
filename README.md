@@ -1,6 +1,6 @@
 <img src="images/logo_347x50_PPa11y.png" width="347" height="50" alt="PayPal accessibility logo" />
 
-#Accessible HTML5 Video Player
+# Accessible HTML5 Video Player
 
 ## by the PayPal Accessibility Team
 See the [Authors](#authors) section below for details.
@@ -21,14 +21,14 @@ A lightweight HTML5 video player which includes support for captions and screen 
 
 ## Implementation
 
-###CSS and Image
+### CSS and Image
 Insert the CSS in the Head of your HTML document. You'll also need to upload the sprite image (or use your own) and adjust the path in the CSS file.
 
 ```html
 <link rel="stylesheet" href="/css/px-video.css" />
 ```
 
-###HTML
+### HTML
 Insert the HTML5 video markup in the Body of your HTML document. Replace the video, poster, and caption URLs. Modify the sizes of video and fallback image as needed.
 ```html
 <div class="px-video-container" id="myvid">
@@ -49,7 +49,7 @@ Insert the HTML5 video markup in the Body of your HTML document. Replace the vid
 </div>
 ```
 
-###JavaScript
+### JavaScript
 Insert two JavaScript files right before the closing Body element of your HTML document. Add a Script element to initialize the video. Options are passed in JSON format. The options are:
 
 - videoId: the value of the ID of the widget container (string) [required]
@@ -75,6 +75,34 @@ new InitPxVideo({
 
 ## Live Demo
 [View Demo](http://paypal.github.io/accessible-html5-video-player/)
+
+## React Version
+The React version has been designed to be integrated into your react codebase easily. The video React component is named `PXvideo` and has the below API:
+
+```javascript
+<PXVideo
+	sources={[
+    'https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.mp4',
+    'https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.webm'
+  ]}
+  caption={{
+    label: 'English captions',
+    source: 'media/captions_PayPal_Austin_en.vtt',
+    lang: 'EN',
+    default: true
+  }}
+  poster="media/poster_PayPal_Austin2.jpg"
+  width="640"
+  height="360"
+  controls={true}
+  id="myvid"
+  fallback={true}
+  seekInterval={20}
+  debug={true}
+/>
+```
+A demo could be reached at: [View Demo](http://paypal.github.io/accessible-html5-video-player/index.react.html)
+
 
 ## Feedback and Contributions
 If you experience any errors or if you have ideas for improvement, please feel free to open an issue or send a pull request.

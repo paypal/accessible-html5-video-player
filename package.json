@@ -5,13 +5,21 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/paypal/accessible-html5-video-player"
-  },  
+  },
   "main": "js/px-video.js",
   "directories": {
     "test": "test"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "prop-types": "^15.5.10"
+  },
   "keywords": [
     "html5",
     "accessible",
@@ -30,7 +38,7 @@
     "url": "https://github.com/paypal/accessible-html5-video-player/issues"
   },
   "homepage": "https://github.com/paypal/accessible-html5-video-player#readme",
- "scripts": {
+  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
