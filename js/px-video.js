@@ -3,6 +3,7 @@ function InitPxVideo(options) {
 	"use strict";
 
 	// Utility function to convert seconds to formatted time
+	
 	function getTimeFromSeconds(seconds){
 		var hh=0, mm=0, ss=0, t="";
 
