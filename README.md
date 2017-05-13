@@ -76,6 +76,34 @@ new InitPxVideo({
 ## Live Demo
 [View Demo](http://paypal.github.io/accessible-html5-video-player/)
 
+## React Version
+The React version has been designed to be integrated into your react codebase easily. The video React component is named `PXvideo` and has the below API:
+
+```javascript
+<PXVideo
+	sources={[
+    'https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.mp4',
+    'https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.webm'
+  ]}
+  caption={{
+    label: 'English captions',
+    source: 'media/captions_PayPal_Austin_en.vtt',
+    lang: 'EN',
+    default: true
+  }}
+  poster="media/poster_PayPal_Austin2.jpg"
+  width="640"
+  height="360"
+  controls={true}
+  id="myvid"
+  fallback={true}
+  seekInterval={20}
+  debug={true}
+/>
+```
+A demo could be reached at: [View Demo](http://paypal.github.io/accessible-html5-video-player/index.react.html)
+
+
 ## Feedback and Contributions
 If you experience any errors or if you have ideas for improvement, please feel free to open an issue or send a pull request.
 
