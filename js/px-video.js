@@ -80,7 +80,11 @@ function InitPxVideo(options) {
 		obj.captionsBtnContainer.className = "px-video-captions-btn-container pull-left show";
 		if (obj.isCaptionDefault) {
 			obj.captionsContainer.className = "px-video-captions pull-left show";
+			obj.captionsContainer.setAttribute("aria-hidden", false);
 			obj.captionsBtn.setAttribute("checked", "checked");
+		} else {
+			obj.captionsContainer.className = "px-video-captions pull-left hide";
+			obj.captionsContainer.setAttribute("aria-hidden", true);
 		}
 	}
 
@@ -572,8 +576,10 @@ function InitPxVideo(options) {
 	obj.captionsBtn.addEventListener('click', function() {
 		if (this.checked) {
 			obj.captionsContainer.className = "px-video-captions show";
+			obj.captionsContainer.setAttribute("aria-hidden", false);
 		} else {
 			obj.captionsContainer.className = "px-video-captions hide";
+			obj.captionsContainer.setAttribute("aria-hidden", true);
 		}
 	  // if fullscreen add fullscreen class
     if (document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen || document.msFullscreenElement) {
@@ -601,6 +607,7 @@ function InitPxVideo(options) {
 	// If no caption file exists, hide container for caption text
 	if (!obj.captionExists) {
 		obj.captionsContainer.className = "px-video-captions hide";
+		obj.captionsContainer.setAttribute("aria-hidden", true);
 	}
 
 	// If caption file exists, process captions
