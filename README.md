@@ -103,6 +103,12 @@ The React version has been designed to be integrated into your react codebase ea
 ```
 A demo could be reached at: [View Demo](http://paypal.github.io/accessible-html5-video-player/index.react.html)
 
+## Development
+```
+npm install // install dependencies
+npm run react // transpile .jsx into valid .js using Babel
+```
+
 
 ## Feedback and Contributions
 If you experience any errors or if you have ideas for improvement, please feel free to open an issue or send a pull request.

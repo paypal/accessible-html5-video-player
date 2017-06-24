@@ -4,12 +4,8 @@ const PropTypes = window.PropTypes || require('prop-types')
 
 const { Component, defaultProps } = React
 
-const extractVideoType = src => {
-  const splatByDot = src.split('.'),
-    len = splatByDot.length
-
-  return splatByDot[len - 1]
-}
+// Utils
+import { extractVideoType, PXVideoInit } from '../utils/video'
 
 class PXVideo extends Component {
 
@@ -22,13 +18,8 @@ class PXVideo extends Component {
       debug
     } = this.props
 
-    new InitPxVideo({
-      "videoId": id,
-      "captionsOnDefault": caption && caption.default,
-      "seekInterval": seekInterval,
-      "videoTitle": title,
-      "debug": debug
-    })
+    // Initialize video player
+    PXVideoInit({ id, caption, seekInterval, debug, title })
   }
 
   render() {
