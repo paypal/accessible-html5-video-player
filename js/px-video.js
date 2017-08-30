@@ -258,6 +258,7 @@ function InitPxVideo(options) {
 	if (options.debug) {
 		console.log("Inserting custom video controls");
 	}
+	var mute_checked_attr = obj.movie.muted === true ? ' checked="checked"' : '';
 	obj.controls.innerHTML = '<div class="clearfix">' +
 			'<div class="pull-left">' +
 				'<button class="px-video-restart" title="' + GLOBAL_STRINGS['RESTART'] + '"><span class="sr-only">' + GLOBAL_STRINGS['RESTART'] + '</span></button>' +
@@ -267,7 +268,7 @@ function InitPxVideo(options) {
 				'<button class="px-video-forward" title="' + GLOBAL_STRINGS['FORWARD'] + '""><span class="sr-only">forward <span class="px-seconds">10</span> seconds</span></button>' +
 			'</div>' +
 			'<div class="px-video-mute-btn-container pull-left" title="' + GLOBAL_STRINGS['MUTE'] + '">' +
-				'<input class="px-video-mute sr-only" id="btnMute'+obj.randomNum+'" type="checkbox" />' +
+				'<input class="px-video-mute sr-only'+mute_checked_attr+'" id="btnMute'+obj.randomNum+'" type="checkbox" />' +
 				'<label id="labelMute'+obj.randomNum+'" for="btnMute'+obj.randomNum+'"><span class="sr-only">' + GLOBAL_STRINGS['MUTE'] + '</span></label>' +
 			'</div>' +
 			'<div class="pull-left">' +
@@ -528,7 +529,8 @@ function InitPxVideo(options) {
 
 		obj.progressBarHoverContainer.innerHTML = time;
 		obj.progressBarHoverContainer.style.position = "absolute";
-		obj.progressBarHoverContainer.style.left = (e.pageX - 25)+"px";
+		obj.progressBarHoverContainer.style.top = (obj.progressBar.offsetTop - 50) + "px";
+		obj.progressBarHoverContainer.style.left = e.offsetX + "px";
 		obj.progressBarHoverContainer.classList.remove("hide");
 	});
 
