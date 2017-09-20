@@ -1,7 +1,7 @@
 {
-  "company": "PayPal",
+  "company":"PayPal",
   "name": "accessible-html5-video-player",
-  "version": "1.0.4",
+  "version": "1.0.3 ",
   "description": "A lightweight HTML5 video player which includes support for captions and screen reader accessibility.",
   "repository": {
     "type": "git",
@@ -17,18 +17,16 @@
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
-    "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "eslint": "^4.5.0",
     "prop-types": "^15.5.10"
   },
   "keywords": [
     "html5",
     "accessible",
     "video",
-    "player",
-    "paypal",
+    "player"
+    "paypal"
     "javascript"
   ],
   "author": "weboverhauls@gmail.com",
@@ -45,6 +43,6 @@
   "homepage": "https://github.com/paypal/accessible-html5-video-player#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "react": "babel src/PXVideo.js --out-file js/pxvideo.react.js --presets=env,react"
+    "react": "babel src/PXVideo.jsx --out-file js/pxvideo.react.js --presets=env,react"
   }
 }
