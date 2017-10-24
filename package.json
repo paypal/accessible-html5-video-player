@@ -1,7 +1,7 @@
 {
   "company": "PayPal",
   "name": "accessible-html5-video-player",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A lightweight HTML5 video player which includes support for captions and screen reader accessibility.",
   "repository": {
     "type": "git",
@@ -12,6 +12,7 @@
     "test": "test"
   },
   "dependencies": {
+    "prop-types": "^15.6.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
   },
@@ -20,7 +21,13 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "eslint": "^4.5.0",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-prettier": "^2.3.1",
+    "eslint-plugin-react": "^7.4.0",
     "prop-types": "^15.5.10"
   },
   "keywords": [
@@ -32,12 +39,10 @@
     "javascript"
   ],
   "author": "weboverhauls@gmail.com",
-  "licenses": [
-    {
-      "type": "BSD",
-      "url": "https://github.com/paypal/accessible-html5-video-player/blob/master/LICENSE.md"
-    }
-  ],
+  "licenses": [{
+    "type": "BSD",
+    "url": "https://github.com/paypal/accessible-html5-video-player/blob/master/LICENSE.md"
+  }],
   "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/paypal/accessible-html5-video-player/issues"
@@ -45,6 +50,6 @@
   "homepage": "https://github.com/paypal/accessible-html5-video-player#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "react": "babel src/PXVideo.js --out-file js/pxvideo.react.js --presets=env,react"
+    "react": "babel src/PXVideo.jsx --out-file js/pxvideo.react.js --presets=env,react"
   }
 }

@@ -15,8 +15,8 @@ var ReactDOM = window.ReactDOM || require('react-dom');
 var PropTypes = window.PropTypes || require('prop-types');
 
 var extractVideoType = function extractVideoType(src) {
-  var splatByDot = src.split('.'),
-      len = splatByDot.length;
+  var splatByDot = src.split(".");
+  var len = splatByDot.length;
 
   return splatByDot[len - 1];
 };
@@ -30,11 +30,11 @@ var PXVideoInit = function PXVideoInit(props) {
 
 
   var PXVideo = new InitPxVideo({
-    "videoId": id,
-    "captionsOnDefault": caption && caption.default,
-    "seekInterval": seekInterval,
-    "videoTitle": title,
-    "debug": debug
+    videoId: id,
+    captionsOnDefault: caption && caption.default,
+    seekInterval: seekInterval,
+    videoTitle: title,
+    debug: debug
   });
 
   return PXVideo;
@@ -61,7 +61,13 @@ var PXVideo = function (_React$Component) {
 
       // Initialize video player
 
-      PXVideoInit({ id: id, caption: caption, seekInterval: seekInterval, debug: debug, title: title });
+      PXVideoInit({
+        id: id,
+        caption: caption,
+        seekInterval: seekInterval,
+        debug: debug,
+        title: title
+      });
     }
   }, {
     key: 'render',
@@ -105,8 +111,12 @@ var PXVideo = function (_React$Component) {
           React.createElement(
             'video',
             videoProps,
-            sources && sources.map(function (src, index) {
-              return React.createElement('source', { key: index, src: src, type: 'video/' + extractVideoType(src) });
+            sources && sources.map(function (src) {
+              return React.createElement('source', {
+                key: src,
+                src: src,
+                type: 'video/' + extractVideoType(src)
+              });
             }),
             caption && React.createElement('track', _extends({ kind: 'captions' }, captionProps)),
             fallback && sources && sources.length >= 1 && React.createElement(
@@ -115,7 +125,12 @@ var PXVideo = function (_React$Component) {
               React.createElement(
                 'a',
                 { href: sources[0] },
-                poster && React.createElement('img', { src: poster, width: width, height: height, alt: 'download video' })
+                poster && React.createElement('img', {
+                  src: poster,
+                  width: width,
+                  height: height,
+                  alt: 'download video'
+                })
               )
             )
           )
@@ -131,26 +146,27 @@ var PXVideo = function (_React$Component) {
 // Declaring PropTypes
 
 
-PXVideo.PropTypes = {
+PXVideo.propTypes = {
   sources: PropTypes.array.isRequired,
   title: PropTypes.string,
   caption: PropTypes.shape({
     label: PropTypes.string,
     src: PropTypes.string.isRequired,
     lang: PropTypes.string,
-    default: PropTypes.boolean
+    default: PropTypes.bool
   }),
   poster: PropTypes.string,
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  controls: PropTypes.boolean,
+  controls: PropTypes.bool,
   id: PropTypes.string.isRequired,
-  fallback: PropTypes.boolean,
+  fallback: PropTypes.bool,
   seekInterval: PropTypes.number,
-  debug: PropTypes.boolean
+  debug: PropTypes.bool
+};
 
-  // Assigning default values
-};PXVideo.defaultProps = {
+// Assigning default values
+PXVideo.defaultProps = {
   width: 640,
   height: 360,
   controls: true,
@@ -160,11 +176,11 @@ PXVideo.PropTypes = {
 };
 
 ReactDOM.render(React.createElement(PXVideo, {
-  sources: ['https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.mp4', 'https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.webm'],
+  sources: ["https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.mp4", "https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.webm"],
   caption: {
-    label: 'English captions',
-    src: 'media/captions_PayPal_Austin_en.vtt',
-    lang: 'en',
+    label: "English captions",
+    src: "media/captions_PayPal_Austin_en.vtt",
+    lang: "en",
     default: true
   },
   poster: 'media/poster_PayPal_Austin2.jpg',
@@ -173,4 +189,4 @@ ReactDOM.render(React.createElement(PXVideo, {
   controls: true,
   id: 'myvid',
   fallback: true
-}), document.getElementById('app'));
+}), document.getElementById("app"));
