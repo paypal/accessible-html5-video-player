@@ -111,13 +111,14 @@ If you experience any errors or if you have ideas for improvement, please feel f
 
 ~~You can also follow and contact the PayPal Accessibility team on Twitter: [@PayPalInclusive](https://twitter.com/paypalinclusive)~~ No longer exists.
 
-## Authors
+## Authors/Maintainer
 The original authors of this project are:
 - Dennis Lembree (primary developer) [https://github.com/weboverhauls](https://github.com/weboverhauls) || [@dennisl](https://twitter.com/dennisl)
 - Victor Tsaran (consultation and testing) || [https://github.com/vick08](https://github.com/vick08) || [@vick08](https://twitter.com/vick08)
 - Jason Gabriele (consultation)
 - Tim Resudek (design)
-- Hozfa Jodiawalla (developer) [https://github.com/hozefaj](https://github.com/hozefaj) || [@hozefaj](https://twitter.com/HozefaJ)
+- Nawaz Khan (developer) [https://github.com/mpnkhan](https://github.com/mpnkhan)
+- Hozefa Jodiawalla (developer) [https://github.com/hozefaj](https://github.com/hozefaj) || [@hozefaj](https://twitter.com/HozefaJ)
 
 ## Browser Support
 - Chrome: full support.
