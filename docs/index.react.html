@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Accessible HTML5 Video Player(React Version)</title>
+  <meta name="description" content="Custom HTML5 video controls and WebVTT captions." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- PX-VIDEO CSS -->
+  <link rel="stylesheet" href="../css/px-video.css" />
+
+  <style>
+    /*** for demo only ***/
+    #wrapper {
+      width: 640px;
+      margin: 1em auto;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    #brand a,
+    p a {
+      border: 1px #fff dotted;
+    }
+
+    #brand a:focus,
+    p a:focus {
+      border: 1px #999 dotted;
+      outline: none;
+    }
+
+    p {
+      padding-top: 1em;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div id="wrapper">
+
+    <div id="brand">
+      <a href="http://paypal.github.io/">
+        <img src="../images/PayPalOpenSourcecolor.svg" width="224" height="28" alt="PayPal open source" />
+      </a>
+    </div>
+
+    <h1>
+      <img
+        src="../images/logo-accessible-HTML5-video-player.svg"
+        width="30"
+        height="30"
+        alt="HTML5-video-player"
+      >Accessible HTML5 Video Player
+    </h1>
+
+    <div id="app"></div>
+
+    <p>
+      <a href="https://github.com/paypal/accessible-html5-video-player" target="_blank">GitHub Repo</a>
+    </p>
+
+  </div>
+  <!-- end page wrapper container -->
+  <script src="../js/strings.js"></script>
+  <script src="../js/px-video.js"></script>
+
+  <script src="https://unpkg.com/react@15.6.2/dist/react.min.js"></script>
+  <script src="https://unpkg.com/react-dom@15.6.2/dist/react-dom.min.js"></script>
+  <script src="https://unpkg.com/prop-types@15.6.0/prop-types.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <script src="../js/pxvideo.react.js"></script>
+
+  <script type="text/babel">
+    ReactDOM.render(
+    <PXVideo
+      sources={[
+        "https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.mp4",
+        "https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.webm"
+      ]}
+      caption={{
+        label: "English captions",
+        src: "media/captions_PayPal_Austin_en.vtt",
+        lang: "en",
+        default: true
+      }}
+      poster="../media/poster_PayPal_Austin2.jpg"
+      width="640"
+      height="360"
+      controls
+      id="myvid"
+      fallback
+      debug
+    />,
+    document.getElementById("app")
+  );
+</script>
+
+</body>
+
+</html>

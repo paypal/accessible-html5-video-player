@@ -172,21 +172,5 @@ PXVideo.defaultProps = {
   controls: true,
   fallback: true,
   seekInterval: 20,
-  debug: true
+  debug: false
 };
-
-ReactDOM.render(React.createElement(PXVideo, {
-  sources: ["https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.mp4", "https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.webm"],
-  caption: {
-    label: "English captions",
-    src: "media/captions_PayPal_Austin_en.vtt",
-    lang: "en",
-    default: true
-  },
-  poster: 'media/poster_PayPal_Austin2.jpg',
-  width: '640',
-  height: '360',
-  controls: true,
-  id: 'myvid',
-  fallback: true
-}), document.getElementById("app"));
