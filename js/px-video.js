@@ -634,30 +634,29 @@ function InitPxVideo(options) {
     false
   );
 
-  // Skip when clicking progress bar
-  obj.progressBar.addEventListener("click", function(e) {
-    obj.pos = (e.pageX - this.offsetLeft) / this.offsetWidth;
-    obj.movie.currentTime = obj.pos * obj.movie.duration;
+	// Skip when clicking progress bar
+	obj.progressBar.addEventListener('click', function(e) {
+		obj.pos = (e.pageX - this.getBoundingClientRect().left) / this.offsetWidth;
+		obj.movie.currentTime = obj.pos * obj.movie.duration;
 
-    // Special handling for "manual" captions
-    if (!obj.isTextTracks) {
-      adjustManualCaptions(obj);
-    }
-  });
+		// Special handling for "manual" captions
+		if (!obj.isTextTracks) {
+			adjustManualCaptions(obj);
+		}
+	});
 
-  // Show skip-to time when hovering on the progress bar
-  obj.progressBar.addEventListener("mousemove", function(e) {
-    obj.pos = (e.pageX - this.offsetLeft) / this.offsetWidth;
+	// Show skip-to time when hovering on the progress bar
+	obj.progressBar.addEventListener('mousemove', function(e) {
+		obj.pos = (e.pageX - this.getBoundingClientRect().left) / this.offsetWidth;
 
-    var seconds = obj.pos * obj.movie.duration;
-    var time = getTimeFromSeconds(seconds);
+		var seconds = obj.pos * obj.movie.duration;
+		var time = getTimeFromSeconds(seconds);
 
-    obj.progressBarHoverContainer.innerHTML = time;
-    obj.progressBarHoverContainer.style.position = "absolute";
-    obj.progressBarHoverContainer.style.left = e.pageX - 25 + "px";
-    obj.progressBarHoverContainer.classList.remove("hide");
-  });
-
+		obj.progressBarHoverContainer.innerHTML = time;
+		obj.progressBarHoverContainer.style.position = "absolute";
+		obj.progressBarHoverContainer.style.left = ((e.pageX - this.getBoundingClientRect().left) - 25)+"px";
+		obj.progressBarHoverContainer.classList.remove("hide");
+	});
   // Hide skip-to time when moving the mouse out of the progress bar
   obj.progressBar.addEventListener("mouseout", function(e) {
     obj.progressBarHoverContainer.classList.add("hide");
