@@ -176,6 +176,7 @@ function InitPxVideo(options) {
 
   // change styles of fullscreen accordingly
   function fullScreenStyles() {
+    var currClass = obj.captionsContainer.className;
     if (
       document.fullscreen ||
       document.mozFullScreen ||
@@ -187,7 +188,7 @@ function InitPxVideo(options) {
       obj.container.setAttribute("style", "width: 100%; height: 100%;");
       obj.controls.className = "px-video-controls js-fullscreen-controls";
       obj.captionsContainer.className =
-        "px-video-captions js-fullscreen-captions";
+        currClass + " js-fullscreen-captions";
       obj.movie.setAttribute("width", "100%");
       obj.movie.setAttribute("height", "100%");
     } else {
@@ -195,7 +196,7 @@ function InitPxVideo(options) {
       // revert back to default styles
       obj.container.setAttribute("style", "width:" + obj.movieWidth + "px");
       obj.controls.className = "px-video-controls";
-      obj.captionsContainer.className = "px-video-captions";
+      obj.captionsContainer.className = currClass.replace('js-fullscreen-captions', '');
       obj.movie.setAttribute("width", obj.movieWidth);
       obj.movie.setAttribute("height", obj.movieHeight);
     }
