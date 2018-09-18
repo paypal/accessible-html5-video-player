@@ -48,6 +48,8 @@ function InitPxVideo(options) {
     obj.captionsContainer.parentNode.parentNode.className = "has-captions";
     if (obj.isCaptionDefault) {
       obj.captionsContainer.className = "px-video-captions show";
+      obj.captionsContainer.setAttribute("aria-live", "polite");
+      obj.captionsContainer.setAttribute("aria-atomic", "true");
       obj.captionsBtn.setAttribute("checked", "checked");
     }
   }
@@ -488,8 +490,11 @@ function InitPxVideo(options) {
   obj.captionsBtn.addEventListener('click', function() { 
     if (this.checked) {
       obj.captionsContainer.className = "px-video-captions show";
+      obj.captionsContainer.setAttribute("aria-live", "polite");
+      obj.captionsContainer.setAttribute("aria-atomic", "true");
     } else {
       obj.captionsContainer.className = "px-video-captions hide";
+      obj.captionsContainer.setAttribute("aria-live", "off");
     }
     // if fullscreen add fullscreen class
     if (document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen || document.msFullscreenElement) {
@@ -508,8 +513,11 @@ function InitPxVideo(options) {
       }
       if (this.checked) {
         obj.captionsContainer.className = "px-video-captions show";
+        obj.captionsContainer.setAttribute("aria-live", "polite");
+        obj.captionsContainer.setAttribute("aria-atomic", "true");
       } else {
         obj.captionsContainer.className = "px-video-captions hide";
+        obj.captionsContainer.setAttribute("aria-live", "off");
       }
     }
   }
@@ -517,6 +525,7 @@ function InitPxVideo(options) {
   // If no caption file exists, hide container for caption text
   if (!obj.captionExists) {
     obj.captionsContainer.className = "px-video-captions hide";
+    obj.captionsContainer.setAttribute("aria-live", "off");
   }
 
   // If caption file exists, process captions
