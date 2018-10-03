@@ -6,5 +6,6 @@ var GLOBAL_STRINGS = {
   RESTART: "Restart",
   CAPTIONS: "Closed captions",
   REWIND: "Rewind",
-  FORWARD: "Forward"
+  FORWARD: "Forward",
+  LIKE: "like"
 };
