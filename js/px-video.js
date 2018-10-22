@@ -42,13 +42,29 @@ function InitPxVideo(options) {
     }
   }
 
+  function showCaptionsSubmenu() {
+      obj.captionsSubMenu.style.display = 'block';
+      obj.captionsSubMenu.setAttribute('aria-hidden', 'false');
+  }
+  function hideCaptionsSubmenu() {
+    obj.captionsSubMenu.style.display = 'none';
+    obj.captionsSubMenu.setAttribute('aria-hidden', 'true');
+  }
+
   // Display captions container and button (for initialization)
   function showCaptionContainerAndButton(obj) {
     obj.captionsBtnContainer.className = "px-video-captions-btn-container show";
     obj.captionsContainer.parentNode.parentNode.className = "has-captions";
     if (obj.isCaptionDefault) {
+      if (obj.textTracks.length > 1) {
+        debugger;
+      }
       obj.captionsContainer.className = "px-video-captions show";
       obj.captionsBtn.setAttribute("checked", "checked");
+    }
+    else {
+      var offOption = obj.captionsSubMenu.getElementsByClassName('px-video-captions-off')[0];
+      offOption.className += ' selected';
     }
   }
 
@@ -261,23 +277,27 @@ function InitPxVideo(options) {
     kind,
     children = obj.movie.childNodes;
 
+  obj.textTracks = [];
   for (var i = 0; i < children.length; i++) {
     if (children[i].nodeName.toLowerCase() === 'track') {
       kind = children[i].getAttribute('kind');
-      if (kind === 'captions') {
+      if (kind === 'captions' || kind === 'subtitles' || kind === 'descriptions') {
         captionSrc = children[i].getAttribute('src');
+        obj.textTracks.push({
+          src: captionSrc,
+          kind: children[i].getAttribute('kind'),
+          label: children[i].getAttribute('label'),
+          srclang: children[i].getAttribute('srclang')
+        });
       }
     }
   }
 
   // Record if caption file exists or not
-  obj.captionExists = true;
-  if (captionSrc === "") {
-    obj.captionExists = false;
-    if (options.debug) {
-      console.log("No caption track found.");
-    }
+  if (!obj.textTracks.length && options.debug) {
+    console.log("No caption track found.");
   }
+
   else {
     if (options.debug) {
       console.log("Caption track found; URI: " + captionSrc);
@@ -480,21 +500,28 @@ function InitPxVideo(options) {
     obj.captionsContainer.innerHTML = "";
   });
 
+
   // ***
   // Captions
   // ***
 
   // Toggle display of captions via captions button
-  obj.captionsBtn.addEventListener('click', function() { 
-    if (this.checked) {
-      obj.captionsContainer.className = "px-video-captions show";
-    } else {
-      obj.captionsContainer.className = "px-video-captions hide";
+  obj.captionsBtn.addEventListener('click', function(e) {
+    if (obj.textTracks.length > 1) {
+      obj.captionsSubMenu.style.display === 'none' ? showCaptionsSubmenu() : hideCaptionsSubmenu();
+      e.preventDefault();
     }
-    // if fullscreen add fullscreen class
-    if (document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen || document.msFullscreenElement) {
-      var currClass = obj.captionsContainer.className;
-      obj.captionsContainer.className = currClass + ' js-fullscreen-captions';
+    else {
+      if (this.checked) {
+          obj.captionsContainer.className = "px-video-captions show";
+      } else {
+          obj.captionsContainer.className = "px-video-captions hide";
+      }
+      // if fullscreen add fullscreen class
+      if (document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen || document.msFullscreenElement) {
+          var currClass = obj.captionsContainer.className;
+          obj.captionsContainer.className = currClass + ' js-fullscreen-captions';
+      }
     }
   }, false);
   obj.captionsBtn.onkeypress = function(e) {
@@ -515,12 +542,43 @@ function InitPxVideo(options) {
   }
 
   // If no caption file exists, hide container for caption text
-  if (!obj.captionExists) {
+  if (!obj.textTracks.length) {
     obj.captionsContainer.className = "px-video-captions hide";
   }
 
   // If caption file exists, process captions
   else {
+
+    //do the submenu for multiple tracks
+    if (obj.textTracks.length > 1) {
+      obj.captionsSubMenu = document.createElement('UL');
+      obj.captionsSubMenu.className = 'px-video-captions-submenu';
+      obj.captionsSubMenu.style.display = 'none';
+      obj.captionsBtnContainer.appendChild(obj.captionsSubMenu);
+      var listItemTrack;
+      for (var j=0; j <= obj.textTracks.length; j++) {
+        //looping one extra time to do the stuff for 'Off' option
+        listItemTrack = document.createElement('LI');
+        if (j < obj.textTracks.length) {
+          var captionSubContainer = document.createElement('DIV');
+          captionSubContainer.className = 'px-video-captions-sub-container-' + obj.textTracks.label;
+          obj.captionsContainer.innerHTML += '<div></div>'
+        }
+        listItemTrack.textContent = (j < obj.textTracks.length) ? obj.textTracks[j].label : 'Off';
+        listItemTrack.className = 'px-video-caption-submenu-item' + ( j < obj.textTracks.length ? '' : ' px-video-captions-off' );
+        obj.captionsSubMenu.appendChild(listItemTrack);
+        listItemTrack.addEventListener('click', function(e) {
+          //first deselect all menu items
+          var allItems = obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item');
+          for (var i = 0; i < allItems.length; i++) {
+            allItems[i].className = allItems[i].className.replace(/selected\s*$/, "");
+          }
+          this.className += ' selected';
+          obj.captionsBtn.checked = !this.className.match(/px-video-captions-off/);
+          hideCaptionsSubmenu();
+        });
+      }
+    }
 
     // Can't use native captioning in the follow browsers:
     if ((obj.browserName==="IE" && obj.browserMajorVersion===10) || 
@@ -559,7 +617,12 @@ function InitPxVideo(options) {
           track.addEventListener("cuechange",function() {
             if (this.activeCues[0]) {
               if (this.activeCues[0].hasOwnProperty("text") || this.activeCues[0].text !== "") {
-                obj.captionsContainer.innerHTML = this.activeCues[0].text;
+                if (obj.textTracks.length > 1) {
+                  var container = obj.captionsContainer.getElementsByClassName('px-video-captions-sub-container-' + this.label);
+                }
+                else {
+                  obj.captionsContainer.innerHTML = this.activeCues[0].text;
+                }
               }
             }
           },false);
@@ -630,7 +693,7 @@ function InitPxVideo(options) {
               }
             }
           }
-        }
+        };
         xhr.open("get", captionSrc, true);
         xhr.send();
       }
