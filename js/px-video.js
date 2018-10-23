@@ -55,7 +55,7 @@ function InitPxVideo(options) {
       if (obj.textTracks.length > 1) {
         var defaultCaptionsSubContainer;
         for (var i=0; i < obj.textTracks.length; i++) {
-          var captionsSubContainer = document.getElementById('px-video-captions-sub-container-' + obj.textTracks[i].label + obj.randomNum);
+          var captionsSubContainer = document.getElementById('px-video-captions-sub-container-' + obj.textTracks[i].label.trim() + obj.randomNum);
           if (obj.textTracks[i].default && defaultCaptionsSubContainer === undefined) {
             captionsSubContainer.className += ' show';
             defaultCaptionsSubContainer = captionsSubContainer;
@@ -484,7 +484,7 @@ function InitPxVideo(options) {
 
   // Clear captions at end of video
   obj.movie.addEventListener('ended', function() {
-    if (obj.textTracks.length < 1) {
+    if (obj.textTracks.length > 1) {
       for (var i=0; i < obj.textTracks.length; i++) {
         obj.captionsContainer.getElementsByClassName('px-video-captions-sub-container')[i].innerHTML = '';
       }
@@ -551,7 +551,7 @@ function InitPxVideo(options) {
         listItemTrack = document.createElement('LI');
         if (j < obj.textTracks.length) {
           var captionSubContainer = document.createElement('DIV');
-          captionSubContainer.id = 'px-video-captions-sub-container-' + obj.textTracks[j].label + obj.randomNum;
+          captionSubContainer.id = 'px-video-captions-sub-container-' + obj.textTracks[j].label.trim() + obj.randomNum;
           captionSubContainer.className = 'px-video-captions-sub-container';
           obj.captionsSubContainers[obj.textTracks[j].label] = captionSubContainer;
           obj.captionsContainer.append(captionSubContainer);
@@ -623,7 +623,7 @@ function InitPxVideo(options) {
             if (this.activeCues[0]) {
               if (this.activeCues[0].hasOwnProperty("text") || this.activeCues[0].text !== "") {
                 if (obj.textTracks.length > 1) {
-                  var subContainer = document.getElementById('px-video-captions-sub-container-' + this.label + obj.randomNum);
+                  var subContainer = document.getElementById('px-video-captions-sub-container-' + this.label.trim() + obj.randomNum);
                   subContainer.innerHTML = this.activeCues[0].text;
                 }
                 else {
