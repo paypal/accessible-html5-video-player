@@ -4,14 +4,12 @@ function InitPxVideo(options) {
 
   // Utilities for caption time codes
   function video_timecode_min(tc) {
-    var tcpair = [];
-    tcpair = tc.split(' --> ');
+    var tcpair = tc.split(' --> ');
     return videosub_tcsecs(tcpair[0]);
   }
 
   function video_timecode_max(tc) {
-    var tcpair = [];
-    tcpair = tc.split(' --> ');
+    var tcpair = tc.split(' --> ');
     return videosub_tcsecs(tcpair[1]);
   }
 
@@ -20,11 +18,9 @@ function InitPxVideo(options) {
       return 0;
     }
     else {
-      var tc1 = [],
-        tc2 = [],
-        seconds;
-      tc1 = tc.split(',');
-      tc2 = tc1[0].split(':');
+      var seconds,
+        tc1 = tc.split(','),
+        tc2 = tc1[0].split(':');
       seconds = Math.floor(tc2[0]*60*60) + Math.floor(tc2[1]*60) + Math.floor(tc2[2]);
       return seconds;
     }
@@ -57,7 +53,18 @@ function InitPxVideo(options) {
     obj.captionsContainer.parentNode.parentNode.className = "has-captions";
     if (obj.isCaptionDefault) {
       if (obj.textTracks.length > 1) {
-        debugger;
+        var defaultCaptionsSubContainer;
+        for (var i=0; i < obj.textTracks.length; i++) {
+          var captionsSubContainer = document.getElementById('px-video-captions-sub-container-' + obj.textTracks[i].label + obj.randomNum);
+          if (obj.textTracks[i].default && defaultCaptionsSubContainer === undefined) {
+            captionsSubContainer.className += ' show';
+            defaultCaptionsSubContainer = captionsSubContainer;
+            obj.captionsBtnContainer.getElementsByClassName('px-video-caption-submenu-item')[i].className += ' selected';
+          }
+          else {
+            captionsSubContainer.className += ' hide';
+          }
+        }
       }
       obj.captionsContainer.className = "px-video-captions show";
       obj.captionsBtn.setAttribute("checked", "checked");
@@ -70,7 +77,7 @@ function InitPxVideo(options) {
 
   // Unfortunately, due to scattered support, browser sniffing is required
   function browserSniff() {
-    var nVer = navigator.appVersion,
+    var   nVer = navigator.appVersion,
       nAgt = navigator.userAgent,
       browserName = navigator.appName,
       fullVersion = ''+parseFloat(navigator.appVersion),
@@ -278,16 +285,17 @@ function InitPxVideo(options) {
     children = obj.movie.childNodes;
 
   obj.textTracks = [];
-  for (var i = 0; i < children.length; i++) {
+  for (var i=0; i < children.length; i++) {
     if (children[i].nodeName.toLowerCase() === 'track') {
       kind = children[i].getAttribute('kind');
       if (kind === 'captions' || kind === 'subtitles' || kind === 'descriptions') {
         captionSrc = children[i].getAttribute('src');
         obj.textTracks.push({
           src: captionSrc,
-          kind: children[i].getAttribute('kind'),
+          kind: kind,
           label: children[i].getAttribute('label'),
-          srclang: children[i].getAttribute('srclang')
+          srclang: children[i].getAttribute('srclang'),
+          default: children[i].hasAttribute('default'),
         });
       }
     }
@@ -497,7 +505,12 @@ function InitPxVideo(options) {
 
   // Clear captions at end of video
   obj.movie.addEventListener('ended', function() {
-    obj.captionsContainer.innerHTML = "";
+    if (obj.textTracks.length < 1) {
+      for (var i=0; i < obj.textTracks.length; i++) {
+        obj.captionsContainer.getElementsByClassName('px-video-captions-sub-container')[i].innerHTML = '';
+      }
+    }
+    obj.captionsContainer.innerHTML = '';
   });
 
 
@@ -555,26 +568,41 @@ function InitPxVideo(options) {
       obj.captionsSubMenu.className = 'px-video-captions-submenu';
       obj.captionsSubMenu.style.display = 'none';
       obj.captionsBtnContainer.appendChild(obj.captionsSubMenu);
+      obj.captionsSubContainers = {};
       var listItemTrack;
       for (var j=0; j <= obj.textTracks.length; j++) {
         //looping one extra time to do the stuff for 'Off' option
         listItemTrack = document.createElement('LI');
         if (j < obj.textTracks.length) {
           var captionSubContainer = document.createElement('DIV');
-          captionSubContainer.className = 'px-video-captions-sub-container-' + obj.textTracks.label;
-          obj.captionsContainer.innerHTML += '<div></div>'
+          captionSubContainer.id = 'px-video-captions-sub-container-' + obj.textTracks[j].label + obj.randomNum;
+          captionSubContainer.className = 'px-video-captions-sub-container';
+          obj.captionsSubContainers[obj.textTracks[j].label] = captionSubContainer;
+          obj.captionsContainer.append(captionSubContainer);
         }
         listItemTrack.textContent = (j < obj.textTracks.length) ? obj.textTracks[j].label : 'Off';
         listItemTrack.className = 'px-video-caption-submenu-item' + ( j < obj.textTracks.length ? '' : ' px-video-captions-off' );
         obj.captionsSubMenu.appendChild(listItemTrack);
-        listItemTrack.addEventListener('click', function(e) {
+        listItemTrack.addEventListener('click', function() {
           //first deselect all menu items
-          var allItems = obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item');
-          for (var i = 0; i < allItems.length; i++) {
-            allItems[i].className = allItems[i].className.replace(/selected\s*$/, "");
+          var allMenuItems = obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item'),
+            currentSubContainer = obj.captionsContainer.getElementsByClassName('px-video-captions-sub-container show')[0],
+            pendingSubContainer = obj.captionsSubContainers[this.textContent];
+          for (var i = 0; i < allMenuItems.length; i++) {
+            allMenuItems[i].className = allMenuItems[i].className.replace(/selected\s*$/, "");
           }
           this.className += ' selected';
           obj.captionsBtn.checked = !this.className.match(/px-video-captions-off/);
+          if (!!currentSubContainer) {
+            currentSubContainer.className =  currentSubContainer.className.replace(/show\s*$/, "hide");
+          }
+          if (this.textContent.toLowerCase() !== 'off') {
+            pendingSubContainer.className = pendingSubContainer.className.replace(/hide\s*$/, 'show');
+            obj.captionsContainer.className = "px-video-captions show";
+          }
+          else {
+            obj.captionsContainer.className = "px-video-captions hide";
+          }
           hideCaptionsSubmenu();
         });
       }
@@ -618,7 +646,8 @@ function InitPxVideo(options) {
             if (this.activeCues[0]) {
               if (this.activeCues[0].hasOwnProperty("text") || this.activeCues[0].text !== "") {
                 if (obj.textTracks.length > 1) {
-                  var container = obj.captionsContainer.getElementsByClassName('px-video-captions-sub-container-' + this.label);
+                  var subContainer = document.getElementById('px-video-captions-sub-container-' + this.label + obj.randomNum);
+                  subContainer.innerHTML = this.activeCues[0].text;
                 }
                 else {
                   obj.captionsContainer.innerHTML = this.activeCues[0].text;
@@ -656,7 +685,7 @@ function InitPxVideo(options) {
         obj.captionsContainer.innerHTML = obj.currentCaption;
       }, false);
 
-      if (captionSrc != "") {
+      if (captionSrc !== '') {
         // Create XMLHttpRequest object
         var xhr;
         if (window.XMLHttpRequest) {
