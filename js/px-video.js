@@ -77,11 +77,9 @@ function InitPxVideo(options) {
 
   // Unfortunately, due to scattered support, browser sniffing is required
   function browserSniff() {
-    var   nVer = navigator.appVersion,
-      nAgt = navigator.userAgent,
+    var nAgt = navigator.userAgent,
       browserName = navigator.appName,
       fullVersion = ''+parseFloat(navigator.appVersion),
-      majorVersion = parseInt(navigator.appVersion,10),
       nameOffset,
       verOffset,
       ix;
@@ -118,7 +116,7 @@ function InitPxVideo(options) {
     else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) < (verOffset=nAgt.lastIndexOf('/')) ) {
       browserName = nAgt.substring(nameOffset,verOffset);
       fullVersion = nAgt.substring(verOffset+1);
-      if (browserName.toLowerCase()==browserName.toUpperCase()) {
+      if (browserName.toLowerCase() === browserName.toUpperCase()) {
         browserName = navigator.appName;
       }
     }
@@ -130,9 +128,8 @@ function InitPxVideo(options) {
       fullVersion=fullVersion.substring(0,ix);
     }
     // Get major version
-    majorVersion = parseInt(''+fullVersion,10);
+    var majorVersion = parseInt(''+fullVersion,10);
     if (isNaN(majorVersion)) {
-      fullVersion = ''+parseFloat(navigator.appVersion);
       majorVersion = parseInt(navigator.appVersion,10);
     }
     // Return data
@@ -187,13 +184,13 @@ function InitPxVideo(options) {
   // If IE8, stop customization (use fallback)
   // If IE9, stop customization (use native controls)
   if (obj.browserName === "IE" && (obj.browserMajorVersion === 8 || obj.browserMajorVersion === 9) ) {
-    return false;
+    return;
   }
 
   // If smartphone or tablet, stop customization as video (and captions in latest devices) are handled natively
   obj.isSmartphoneOrTablet = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
   if (obj.isSmartphoneOrTablet) {
-    return false;
+    return;
   }
 
   // Set debug mode
@@ -295,7 +292,7 @@ function InitPxVideo(options) {
           kind: kind,
           label: children[i].getAttribute('label'),
           srclang: children[i].getAttribute('srclang'),
-          default: children[i].hasAttribute('default'),
+          default: children[i].hasAttribute('default')
         });
       }
     }
@@ -347,10 +344,7 @@ function InitPxVideo(options) {
   obj.txtSeconds[1].innerHTML = obj.seekInterval;
 
   // Determine if HTML5 textTracks is supported (for captions)
-  obj.isTextTracks = false;
-  if (obj.movie.textTracks) {
-    obj.isTextTracks = true;
-  }
+  obj.isTextTracks = !!obj.movie.textTracks;
 
   // Play
   obj.btnPlay.addEventListener('click', function() {
@@ -422,31 +416,16 @@ function InitPxVideo(options) {
 
   // Mute
   obj.btnMute.addEventListener('click', function() {
-    if (obj.movie.muted === true) {
-      obj.movie.muted = false;
-    }
-    else {
-      obj.movie.muted = true;
-    }
+    obj.movie.muted = !obj.movie.muted;
   }, false);
  
   obj.btnMute.onkeypress = function(e) {
-    if(e.keyCode == 13){ // enter key
+    if(e.keyCode === 13){ // enter key
       e.preventDefault();
-      if (this.checked == true) {
-        this.checked = false;
-      }
-      else {
-        this.checked = true;
-      }
-      if (obj.movie.muted === true) {
-        obj.movie.muted = false;
-      }
-      else {
-        obj.movie.muted = true;
-      }
+      this.checked = !this.checked;
+      obj.movie.muted = !obj.movie.muted;
     }
-  }
+  };
 
   // Duration
   obj.movie.addEventListener("timeupdate", function() {
@@ -490,9 +469,9 @@ function InitPxVideo(options) {
     }
   }, false);
   obj.fullScreenBtn.onkeypress = function(e) {
-    if (e.keyCode == 13){ // enter key
+    if (e.keyCode === 13){ // enter key
       e.preventDefault();
-      if (this.checked == true) {
+      if (this.checked) {
         this.checked = false;
         exitFullScreen();
       }
@@ -501,7 +480,7 @@ function InitPxVideo(options) {
         launchFullScreen(obj.container);
       }
     }
-  }
+  };
 
   // Clear captions at end of video
   obj.movie.addEventListener('ended', function() {
@@ -538,21 +517,16 @@ function InitPxVideo(options) {
     }
   }, false);
   obj.captionsBtn.onkeypress = function(e) {
-    if (e.keyCode == 13){ // enter key
+    if (e.keyCode === 13){ // enter key
       e.preventDefault();
-      if (this.checked == true) {
-        this.checked = false;
-      }
-      else {
-        this.checked = true;
-      }
+      this.checked = !this.checked;
       if (this.checked) {
         obj.captionsContainer.className = "px-video-captions show";
       } else {
         obj.captionsContainer.className = "px-video-captions hide";
       }
     }
-  }
+  };
 
   // If no caption file exists, hide container for caption text
   if (!obj.textTracks.length) {
@@ -562,7 +536,7 @@ function InitPxVideo(options) {
   // If caption file exists, process captions
   else {
 
-    //do the submenu for multiple tracks
+    //make the submenu and subcontainers for multiple tracks
     if (obj.textTracks.length > 1) {
       obj.captionsSubMenu = document.createElement('UL');
       obj.captionsSubMenu.className = 'px-video-captions-submenu';
@@ -570,7 +544,7 @@ function InitPxVideo(options) {
       obj.captionsBtnContainer.appendChild(obj.captionsSubMenu);
       obj.captionsSubContainers = {};
       var listItemTrack;
-      for (var j=0; j <= obj.textTracks.length; j++) {
+      for (j=0; j <= obj.textTracks.length; j++) {
         //looping one extra time to do the stuff for 'Off' option
         listItemTrack = document.createElement('LI');
         if (j < obj.textTracks.length) {
@@ -608,7 +582,10 @@ function InitPxVideo(options) {
       }
     }
 
-    // Can't use native captioning in the follow browsers:
+    var track = {},
+      tracks;
+
+      // Can't use native captioning in the follow browsers:
     if ((obj.browserName==="IE" && obj.browserMajorVersion===10) || 
         (obj.browserName==="IE" && obj.browserMajorVersion===11) || 
         (obj.browserName==="Firefox" && obj.browserMajorVersion>=31) || 
@@ -621,9 +598,8 @@ function InitPxVideo(options) {
       obj.isTextTracks = false;
 
       // turn off native caption rendering to avoid double captions [doesn't work in Safari 7; see patch below]
-      var track = {};
-      var tracks = obj.movie.textTracks;
-      for (var j=0; j < tracks.length; j++) {
+      tracks = obj.movie.textTracks;
+      for (j=0; j < tracks.length; j++) {
         track = obj.movie.textTracks[j];
         track.mode = "hidden";
       }
@@ -636,8 +612,7 @@ function InitPxVideo(options) {
       }
       showCaptionContainerAndButton(obj);
 
-      var track = {};
-      var tracks = obj.movie.textTracks;
+      tracks = obj.movie.textTracks;
       for (var j=0; j < tracks.length; j++) {
         track = obj.movie.textTracks[j];
         track.mode = "hidden";
@@ -701,10 +676,9 @@ function InitPxVideo(options) {
               }
 
               obj.captions = [];
-              var records = [],
-                record,
-                req = xhr.responseText;
-              records = req.split('\n\n');
+              var record,
+                req = xhr.responseText,
+                records = req.split('\n\n');
               for (var r=0; r < records.length; r++) {
                 record = records[r];
                 obj.captions[r] = [];
@@ -731,7 +705,7 @@ function InitPxVideo(options) {
     // If Safari 7, removing track from DOM [see 'turn off native caption rendering' above]
     if (obj.browserName === "Safari" && obj.browserMajorVersion === 7) {
       console.log("Safari 7 detected; removing track from DOM");
-      var tracks = obj.movie.getElementsByTagName("track");
+      tracks = obj.movie.getElementsByTagName("track");
       obj.movie.removeChild(tracks[0]);
     }
 
@@ -752,4 +726,4 @@ function InitPxVideo(options) {
   document.addEventListener("msfullscreenchange", function () {
     fullScreenStyles();
   }, false);
-};
+}
