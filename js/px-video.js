@@ -489,7 +489,9 @@ function InitPxVideo(options) {
         obj.captionsContainer.getElementsByClassName('px-video-captions-sub-container')[i].innerHTML = '';
       }
     }
-    obj.captionsContainer.innerHTML = '';
+    else {
+      obj.captionsContainer.innerHTML = '';
+    }
   });
 
 
