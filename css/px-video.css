@@ -330,6 +330,14 @@
   background-color: #009cdf;
   color: #ffffff;
 }
+.px-video-captions-submenu li:before {
+  content: '';
+  width: 20px;
+  display: inline-block;
+}
+.px-video-captions-submenu li.selected:before {
+  content: '\2713';
+}
 .px-video-captions-btn-container label {
   display: inline-block;
   width: 25px;
