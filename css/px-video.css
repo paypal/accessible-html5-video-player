@@ -325,6 +325,11 @@
 .px-video-captions-submenu li:hover {
   background-color: #e6e6e6;
 }
+.px-video-captions-submenu li:focus {
+  background-color: #e6e6e6;
+  outline: 1px #999 dotted;
+}
+
 .px-video-captions-submenu li.selected {
   cursor: default;
   background-color: #009cdf;
