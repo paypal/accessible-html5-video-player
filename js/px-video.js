@@ -695,7 +695,7 @@ function InitPxVideo(options) {
             if (this.activeCues[0]) {
               if (this.activeCues[0].hasOwnProperty("text") || this.activeCues[0].text !== "") {
                 if (obj.textTracks.length > 1) {
-                  var subContainer = document.getElementById('px-video-captions-sub-container-' + this.label.id);
+                  var subContainer = document.getElementById('px-video-captions-sub-container-' + this.label.trim().replace(/\s+/, '-') +  + obj.randomNum);
                   subContainer.innerHTML = this.activeCues[0].text;
                 }
                 else {
