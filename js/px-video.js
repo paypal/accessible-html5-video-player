@@ -40,7 +40,6 @@ function InitPxVideo(options) {
         }
     }
   }
-
   function renderManualCaptions (index) {
     var thisTrack = obj.textTracks[index];
     // Check if the next caption is in the current time range
@@ -61,7 +60,6 @@ function InitPxVideo(options) {
       obj.captionsContainer.innerHTML = thisTrack.currentCaption;
     }
   }
-
   function requestCaption (vttSrc, index) {
       // Create XMLHttpRequest object
       var xhr;
@@ -118,6 +116,32 @@ function InitPxVideo(options) {
     obj.captionsSubMenu.setAttribute('aria-hidden', 'true');
   }
 
+  function handleCaptionSelection (e) {
+      var allMenuItems = obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item'),
+          currentSubContainer = obj.captionsContainer.getElementsByClassName('px-video-captions-sub-container show')[0],
+          pendingSubContainer = obj.captionsSubContainers[e.target.textContent];
+      for (var i = 0; i < allMenuItems.length; i++) {
+          //first deselect all menu items
+          allMenuItems[i].className = allMenuItems[i].className.replace(/selected\s*$/, "");
+          allMenuItems[i].setAttribute('aria-checked', 'false');
+      }
+      e.target.className += ' selected';
+      e.target.setAttribute('aria-checked', true);
+      obj.captionsBtn.checked = !e.target.className.match(/px-video-captions-off/);
+      if (!!currentSubContainer) {
+          currentSubContainer.className =  currentSubContainer.className.replace(/show\s*$/, "hide");
+      }
+      if (e.target.textContent.toLowerCase() !== 'off') {
+          pendingSubContainer.className = pendingSubContainer.className.replace(/hide\s*$/, 'show');
+          obj.captionsContainer.className = "px-video-captions show";
+      }
+      else {
+          obj.captionsContainer.className = "px-video-captions hide";
+      }
+      hideCaptionsSubmenu();
+      obj.captionsBtn.focus();
+  }
+
   // Display captions container and button (for initialization)
   function showCaptionContainerAndButton(obj) {
     obj.captionsBtnContainer.className = "px-video-captions-btn-container show";
@@ -126,14 +150,17 @@ function InitPxVideo(options) {
       if (obj.textTracks.length > 1) {
         var defaultCaptionsSubContainer;
         for (var i=0; i < obj.textTracks.length; i++) {
-          var captionsSubContainer = document.getElementById('px-video-captions-sub-container-' + obj.textTracks[i].id);
+          var captionsSubContainer = document.getElementById('px-video-captions-sub-container-' + obj.textTracks[i].id),
+            captionsMenuItem = obj.captionsBtnContainer.getElementsByClassName('px-video-caption-submenu-item')[i];
           if (obj.textTracks[i].default && defaultCaptionsSubContainer === undefined) {
             captionsSubContainer.className += ' show';
             defaultCaptionsSubContainer = captionsSubContainer;
-            obj.captionsBtnContainer.getElementsByClassName('px-video-caption-submenu-item')[i].className += ' selected';
+            captionsMenuItem.className += ' selected';
+            captionsMenuItem.setAttribute('aria-checked', 'true');
           }
           else {
             captionsSubContainer.className += ' hide';
+            captionsMenuItem.setAttribute('aria-checked', 'true');
           }
         }
       }
@@ -576,23 +603,32 @@ function InitPxVideo(options) {
     if (obj.textTracks.length > 1) {
       obj.captionsSubMenu.style.display === 'none' ? showCaptionsSubmenu() : hideCaptionsSubmenu();
       e.preventDefault();
+      return;
     }
-    else {
-      if (this.checked) {
-          obj.captionsContainer.className = "px-video-captions show";
-      } else {
-          obj.captionsContainer.className = "px-video-captions hide";
-      }
-      // if fullscreen add fullscreen class
-      if (document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen || document.msFullscreenElement) {
-          var currClass = obj.captionsContainer.className;
-          obj.captionsContainer.className = currClass + ' js-fullscreen-captions';
-      }
+    if (this.checked) {
+        obj.captionsContainer.className = "px-video-captions show";
+    } else {
+        obj.captionsContainer.className = "px-video-captions hide";
+    }
+    // if fullscreen add fullscreen class
+    if (document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen || document.msFullscreenElement) {
+        var currClass = obj.captionsContainer.className;
+        obj.captionsContainer.className = currClass + ' js-fullscreen-captions';
     }
   }, false);
-  obj.captionsBtn.onkeypress = function(e) {
+  obj.captionsBtn.addEventListener('keydown', function(e) {
     if (e.keyCode === 13){ // enter key
       e.preventDefault();
+      if (obj.textTracks.length > 1) {
+        if (obj.captionsSubMenu.style.display === 'none') {
+          showCaptionsSubmenu();
+          obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item selected')[0].focus();
+        }
+        else {
+          hideCaptionsSubmenu();
+        }
+        return;
+      }
       this.checked = !this.checked;
       if (this.checked) {
         obj.captionsContainer.className = "px-video-captions show";
@@ -600,7 +636,7 @@ function InitPxVideo(options) {
         obj.captionsContainer.className = "px-video-captions hide";
       }
     }
-  };
+  });
 
   // If no caption file exists, hide container for caption text
   if (!obj.textTracks.length) {
@@ -614,6 +650,7 @@ function InitPxVideo(options) {
     if (obj.textTracks.length > 1) {
       obj.captionsSubMenu = document.createElement('UL');
       obj.captionsSubMenu.className = 'px-video-captions-submenu';
+      obj.captionsSubMenu.setAttribute('role', 'menu');
       obj.captionsSubMenu.style.display = 'none';
       obj.captionsBtnContainer.appendChild(obj.captionsSubMenu);
       obj.captionsSubContainers = {};
@@ -630,28 +667,18 @@ function InitPxVideo(options) {
         }
         listItemTrack.textContent = (j < obj.textTracks.length) ? obj.textTracks[j].label : 'Off';
         listItemTrack.className = 'px-video-caption-submenu-item' + ( j < obj.textTracks.length ? '' : ' px-video-captions-off' );
+        listItemTrack.setAttribute('role', 'menuitemradio');
+        listItemTrack.setAttribute('tabindex', '0');
         obj.captionsSubMenu.appendChild(listItemTrack);
-        listItemTrack.addEventListener('click', function() {
-          //first deselect all menu items
-          var allMenuItems = obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item'),
-            currentSubContainer = obj.captionsContainer.getElementsByClassName('px-video-captions-sub-container show')[0],
-            pendingSubContainer = obj.captionsSubContainers[this.textContent];
-          for (var i = 0; i < allMenuItems.length; i++) {
-            allMenuItems[i].className = allMenuItems[i].className.replace(/selected\s*$/, "");
+        listItemTrack.addEventListener('click', handleCaptionSelection);
+        listItemTrack.addEventListener('keydown', function (e) {
+          e.stopPropagation();
+          if (e.keyCode === 13) {
+            handleCaptionSelection(e);
           }
-          this.className += ' selected';
-          obj.captionsBtn.checked = !this.className.match(/px-video-captions-off/);
-          if (!!currentSubContainer) {
-            currentSubContainer.className =  currentSubContainer.className.replace(/show\s*$/, "hide");
+          if (e.keyCode === 27) {
+            hideCaptionsSubmenu();
           }
-          if (this.textContent.toLowerCase() !== 'off') {
-            pendingSubContainer.className = pendingSubContainer.className.replace(/hide\s*$/, 'show');
-            obj.captionsContainer.className = "px-video-captions show";
-          }
-          else {
-            obj.captionsContainer.className = "px-video-captions hide";
-          }
-          hideCaptionsSubmenu();
         });
       }
     }
