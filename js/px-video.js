@@ -28,14 +28,85 @@ function InitPxVideo(options) {
 
   // For "manual" captions, adjust caption position when play time changed (via rewind, clicking progress bar, etc.)
   function adjustManualCaptions(obj) {
-    obj.subcount = 0;
-    while (video_timecode_max(obj.captions[obj.subcount][0]) < obj.movie.currentTime.toFixed(1)) {
-      obj.subcount++;
-      if (obj.subcount > obj.captions.length-1) {
-        obj.subcount = obj.captions.length-1;
-        break;
-      }
+    for (i=0; i < obj.textTracks.length; i++) {
+        var thisTrack = obj.textTracks[i];
+        thisTrack.subcount = 0;
+        while (video_timecode_max(thisTrack.manualCaptions[thisTrack.subcount][0]) < obj.movie.currentTime.toFixed(1)) {
+            thisTrack.subcount++;
+            if (thisTrack.subcount > thisTrack.manualCaptions.length-1) {
+                thisTrack.subcount = thisTrack.manualCaptions.length-1;
+                break;
+            }
+        }
     }
+  }
+
+  function renderManualCaptions (index) {
+    var thisTrack = obj.textTracks[index];
+    // Check if the next caption is in the current time range
+    if (obj.movie.currentTime.toFixed(1) > video_timecode_min(thisTrack.manualCaptions[thisTrack.subcount][0]) &&
+        obj.movie.currentTime.toFixed(1) < video_timecode_max(thisTrack.manualCaptions[thisTrack.subcount][0])) {
+        thisTrack.currentCaption = thisTrack.manualCaptions[thisTrack.subcount][1];
+    }
+    // Is there a next timecode?
+    if (obj.movie.currentTime.toFixed(1) > video_timecode_max(thisTrack.manualCaptions[thisTrack.subcount][0]) &&
+        thisTrack.subcount < (thisTrack.manualCaptions.length-1)) {
+        thisTrack.subcount++;
+    }
+    // Render the caption
+    if (obj.textTracks.length > 1) {
+        obj.captionsSubContainers[thisTrack.label].innerHTML = thisTrack.currentCaption;
+    }
+    else {
+      obj.captionsContainer.innerHTML = thisTrack.currentCaption;
+    }
+  }
+
+  function requestCaption (vttSrc, index) {
+      // Create XMLHttpRequest object
+      var xhr;
+      if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+      } else if (window.ActiveXObject) { // IE8
+        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      (function(index){ // iife to copy index as value
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              if (options.debug) {
+                console.log("xhr = 200");
+              }
+
+              var thisTrack = obj.textTracks[index],
+                record,
+                req = xhr.responseText.replace(/\r\n/g, '\n'), //ensure unix line endings
+                records = req.split('\n\n');
+              for (var r=0; r < records.length; r++) {
+                record = records[r];
+                thisTrack.manualCaptions[r] = [];
+                thisTrack.manualCaptions[r] = record.split('\n');
+                if (thisTrack.manualCaptions[r].length === 3) {
+                  // some vtt files have a line to denote an index for each caption
+                  thisTrack.manualCaptions[r].shift();
+                }
+              }
+              // Remove first element ("VTT")
+              thisTrack.manualCaptions.shift();
+
+              if (options.debug) {
+                console.log('Successfully loaded the caption file via ajax.');
+              }
+            } else {
+              if (options.debug) {
+                console.log('There was a problem loading the caption file via ajax.');
+              }
+            }
+          }
+        };
+      }(index));
+      xhr.open("get", vttSrc, true);
+      xhr.send();
   }
 
   function showCaptionsSubmenu() {
@@ -555,7 +626,7 @@ function InitPxVideo(options) {
           captionSubContainer.id = 'px-video-captions-sub-container-' + obj.textTracks[j].id;
           captionSubContainer.className = 'px-video-captions-sub-container';
           obj.captionsSubContainers[obj.textTracks[j].label] = captionSubContainer;
-          obj.captionsContainer.append(captionSubContainer);
+          obj.captionsContainer.appendChild(captionSubContainer);
         }
         listItemTrack.textContent = (j < obj.textTracks.length) ? obj.textTracks[j].label : 'Off';
         listItemTrack.className = 'px-video-caption-submenu-item' + ( j < obj.textTracks.length ? '' : ' px-video-captions-off' );
@@ -643,65 +714,19 @@ function InitPxVideo(options) {
       }
       showCaptionContainerAndButton(obj);
 
-      // Render captions from array at appropriate time
-      obj.currentCaption = '';
-      obj.subcount = 0;
-      obj.captions = [];
+      for (j=0; j<obj.textTracks.length; j++) {
+        // Render captions from array at appropriate time
+        obj.textTracks[j].currentCaption = '';
+        obj.textTracks[j].subcount = 0;
+        obj.textTracks[j].manualCaptions = [];
 
-      obj.movie.addEventListener('timeupdate', function() {
-        // Check if the next caption is in the current time range
-        if (obj.movie.currentTime.toFixed(1) > video_timecode_min(obj.captions[obj.subcount][0]) &&
-          obj.movie.currentTime.toFixed(1) < video_timecode_max(obj.captions[obj.subcount][0])) {
-            obj.currentCaption = obj.captions[obj.subcount][1];
-        }
-        // Is there a next timecode?
-        if (obj.movie.currentTime.toFixed(1) > video_timecode_max(obj.captions[obj.subcount][0]) &&
-          obj.subcount < (obj.captions.length-1)) {
-            obj.subcount++;
-        }
-        // Render the caption
-        obj.captionsContainer.innerHTML = obj.currentCaption;
-      }, false);
+        (function(k) { // iife to copy j as value
+          obj.movie.addEventListener('timeupdate', function () {
+            renderManualCaptions(k);
+          }, false);
+        }(j));
 
-      if (captionSrc !== '') {
-        // Create XMLHttpRequest object
-        var xhr;
-        if (window.XMLHttpRequest) {
-          xhr = new XMLHttpRequest();
-        } else if (window.ActiveXObject) { // IE8
-          xhr = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-              if (options.debug) {
-                console.log("xhr = 200");
-              }
-
-              obj.captions = [];
-              var record,
-                req = xhr.responseText,
-                records = req.split('\n\n');
-              for (var r=0; r < records.length; r++) {
-                record = records[r];
-                obj.captions[r] = [];
-                obj.captions[r] = record.split('\n');
-              }
-              // Remove first element ("VTT")
-              obj.captions.shift();
-
-              if (options.debug) {
-                console.log('Successfully loaded the caption file via ajax.');
-              }
-            } else {
-              if (options.debug) {
-                console.log('There was a problem loading the caption file via ajax.');
-              }
-            }
-          }
-        };
-        xhr.open("get", captionSrc, true);
-        xhr.send();
+        requestCaption(obj.textTracks[j].src, j);
       }
     }
 
