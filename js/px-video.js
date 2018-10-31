@@ -160,7 +160,7 @@ function InitPxVideo(options) {
           }
           else {
             captionsSubContainer.className += ' hide';
-            captionsMenuItem.setAttribute('aria-checked', 'true');
+            captionsMenuItem.setAttribute('aria-checked', 'false');
           }
         }
       }
@@ -617,7 +617,7 @@ function InitPxVideo(options) {
     }
   }, false);
   obj.captionsBtn.addEventListener('keydown', function(e) {
-    if (e.keyCode === 13){ // enter key
+    if (e.keyCode === 13 || e.keyCode === 32){ // enter key or spacebar
       e.preventDefault();
       if (obj.textTracks.length > 1) {
         if (obj.captionsSubMenu.style.display === 'none') {
@@ -646,7 +646,7 @@ function InitPxVideo(options) {
   // If caption file exists, process captions
   else {
 
-    //make the submenu and subcontainers for multiple tracks
+    //make the submenu and caption subcontainers for multiple tracks
     if (obj.textTracks.length > 1) {
       obj.captionsSubMenu = document.createElement('UL');
       obj.captionsSubMenu.className = 'px-video-captions-submenu';
@@ -668,6 +668,7 @@ function InitPxVideo(options) {
         listItemTrack.textContent = (j < obj.textTracks.length) ? obj.textTracks[j].label : 'Off';
         listItemTrack.className = 'px-video-caption-submenu-item' + ( j < obj.textTracks.length ? '' : ' px-video-captions-off' );
         listItemTrack.setAttribute('role', 'menuitemradio');
+        listItemTrack.setAttribute('aria-checked', 'false');
         listItemTrack.setAttribute('tabindex', '0');
         obj.captionsSubMenu.appendChild(listItemTrack);
         listItemTrack.addEventListener('click', handleCaptionSelection);
