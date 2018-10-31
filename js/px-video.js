@@ -167,9 +167,10 @@ function InitPxVideo(options) {
       obj.captionsContainer.className = "px-video-captions show";
       obj.captionsBtn.setAttribute("checked", "checked");
     }
-    else {
+    else if (obj.textTracks.length > 1) {
       var offOption = obj.captionsSubMenu.getElementsByClassName('px-video-captions-off')[0];
       offOption.className += ' selected';
+      offOption.setAttribute('aria-checked', 'true');
     }
   }
 
