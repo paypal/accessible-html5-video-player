@@ -351,6 +351,8 @@
   margin: 3px 0 0 0;
   background: no-repeat url("../images/px-video-sprite.svg");
   background-position: -6px -835px;
+  border: none;
+  vertical-align: middle;
 }
 @media only screen and (min-width: 540px) {
   .px-video-captions-btn-container {
