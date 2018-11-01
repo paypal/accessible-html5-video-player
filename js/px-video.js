@@ -208,7 +208,7 @@ function InitPxVideo(options) {
     console.log("Inserting custom video controls");
   }
   obj.controls.innerHTML = '<div class="progress-bar">' +
-    '<progress class="px-video-progress" max="100" value="0"><span>0</span>% played</progress>' +
+    '<input type="range" class="px-video-progress" style="--min: 0; --max: 100; --val: 0;" max="100" value="0"/>' +
     '</div>' +
     '<div class="px-video-time">' +
       '<span class="sr-only">time</span> <span class="px-video-duration">00:00</span>' +
@@ -226,7 +226,8 @@ function InitPxVideo(options) {
         '<label id="labelMute'+obj.randomNum+'" for="btnMute'+obj.randomNum+'"><span class="sr-only">' + GLOBAL_STRINGS['MUTE'] + '</span></label>' +
       '</div>' +
       '<div class="px-video-volume-slider">' +
-        '<label for="volume'+obj.randomNum+'" class="sr-only">Volume:</label><input id="volume'+obj.randomNum+'" class="px-video-volume" type="range" min="0" max="10" value="5" />' +
+        '<label for="volume'+obj.randomNum+'" class="sr-only">Volume:</label>' +
+        '<input id="volume'+obj.randomNum+'" class="px-video-volume" type="range" min="0" max="10" value="5" />' +
       '</div>' +
       '<div class="px-video-captions-btn-container hide">' +
         '<input class="px-video-btnCaptions sr-only" id="btnCaptions'+obj.randomNum+'" type="checkbox" />' +
@@ -305,7 +306,6 @@ function InitPxVideo(options) {
   obj.btnVolume = obj.container.getElementsByClassName('px-video-volume')[0];
   obj.btnMute = obj.container.getElementsByClassName('px-video-mute')[0];
   obj.progressBar = obj.container.getElementsByClassName('px-video-progress')[0];
-  obj.progressBarSpan = obj.progressBar.getElementsByTagName('span')[0];
   obj.captionsContainer = obj.container.getElementsByClassName('px-video-captions')[0];
   obj.captionsBtn = obj.container.getElementsByClassName('px-video-btnCaptions')[0];
   obj.captionsBtnContainer = obj.container.getElementsByClassName('px-video-captions-btn-container')[0];
@@ -313,6 +313,21 @@ function InitPxVideo(options) {
   obj.txtSeconds = obj.container.getElementsByClassName('px-seconds');
   obj.fullScreenBtn = obj.container.getElementsByClassName('px-video-btnFullScreen')[0];
   obj.fullScreenBtnContainer = obj.container.getElementsByClassName('px-video-fullscreen-btn-container')[0];
+
+  
+  obj.progressBar.addEventListener('change', function (e) {
+    obj.progressBar.style.setProperty('--val', + obj.progressBar.value);
+
+    obj.pos = obj.progressBar.value / 100; //(e.pageX - this.offsetLeft) / this.offsetWidth;
+    obj.movie.currentTime = obj.pos * obj.movie.duration;
+
+    // Special handling for "manual" captions
+    if (!obj.isTextTracks) {
+      adjustManualCaptions(obj);
+    }
+
+  }, false);
+  
 
   // Update number of seconds in rewind and fast forward buttons
   obj.txtSeconds[0].innerHTML = obj.seekInterval;
@@ -438,20 +453,11 @@ function InitPxVideo(options) {
     obj.percent = (100 / obj.movie.duration) * obj.movie.currentTime;
     if (obj.percent > 0) {
       obj.progressBar.value = obj.percent;
-      obj.progressBarSpan.innerHTML = obj.percent;
     }
+
+    obj.progressBar.style.setProperty('--val', + obj.progressBar.value);
   }, false);
 
-  // Skip when clicking progress bar
-  obj.progressBar.addEventListener('click', function(e) {
-    obj.pos = (e.pageX - this.offsetLeft) / this.offsetWidth;
-    obj.movie.currentTime = obj.pos * obj.movie.duration;
-
-    // Special handling for "manual" captions
-    if (!obj.isTextTracks) {
-      adjustManualCaptions(obj);
-    }
-  });
 
   // Toggle display of fullscreen button
   obj.fullScreenBtn.addEventListener('click', function() { 
