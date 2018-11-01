@@ -110,10 +110,12 @@ function InitPxVideo(options) {
   function showCaptionsSubmenu() {
       obj.captionsSubMenu.style.display = 'block';
       obj.captionsSubMenu.setAttribute('aria-hidden', 'false');
+      obj.captionsBtn.setAttribute('aria-expanded', 'true');
   }
   function hideCaptionsSubmenu() {
     obj.captionsSubMenu.style.display = 'none';
     obj.captionsSubMenu.setAttribute('aria-hidden', 'true');
+    obj.captionsBtn.setAttribute('aria-expanded', 'false');
   }
 
   function handleCaptionSelection (e) {
@@ -450,7 +452,7 @@ function InitPxVideo(options) {
 
   if (obj.textTracks.length > 1) {
     // Replace captions checkbox with button when multiple captions are present
-    var oldLabel = obj.captionsBtn.nextSibling,
+    var oldLabel = obj.captionsBtn.nextElementSibling,
       newLabel = document.createElement('SPAN'),
       newCaptionsBtn = document.createElement('BUTTON');
     newLabel.textContent = oldLabel.textContent;
@@ -458,6 +460,8 @@ function InitPxVideo(options) {
     newCaptionsBtn.className = 'px-video-btnCaptions';
     newCaptionsBtn.id = 'btnCaptions' + obj.randomNum;
     newCaptionsBtn.appendChild(newLabel);
+    newCaptionsBtn.setAttribute('aria-expanded', 'false');
+    newCaptionsBtn.setAttribute('aria-haspopup', 'menu');
     obj.captionsBtnContainer.removeChild(oldLabel);
     obj.captionsBtn.parentNode.replaceChild(newCaptionsBtn, obj.captionsBtn);
     obj.captionsBtn = newCaptionsBtn;
@@ -693,16 +697,38 @@ function InitPxVideo(options) {
         listItemTrack.className = 'px-video-caption-submenu-item' + ( j < obj.textTracks.length ? '' : ' px-video-captions-off' );
         listItemTrack.setAttribute('role', 'menuitemradio');
         listItemTrack.setAttribute('aria-checked', 'false');
-        listItemTrack.setAttribute('tabindex', '0');
+        listItemTrack.setAttribute('tabindex', '-1');
         obj.captionsSubMenu.appendChild(listItemTrack);
         listItemTrack.addEventListener('click', handleCaptionSelection);
         listItemTrack.addEventListener('keydown', function (e) {
           e.stopPropagation();
-          if (e.keyCode === 13) {
+          if (e.keyCode === 13) { // enter key
             handleCaptionSelection(e);
+            return;
           }
-          if (e.keyCode === 27) {
+          if (e.keyCode === 27) { // esc key
             hideCaptionsSubmenu();
+            return;
+          }
+          var items = obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item'),
+            first = items[0],
+            last = items[items.length-1];
+          if (e.keyCode === 38) { // up-arrow key
+            if (this === first) {
+              last.focus();
+            }
+            else {
+              this.previousElementSibling.focus();
+            }
+            return;
+          }
+          if (e.keyCode === 40) { // down-arrow key
+            if (this === last) {
+              first.focus();
+            }
+            else {
+              this.nextElementSibling.focus();
+            }
           }
         });
       }
