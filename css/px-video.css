@@ -343,11 +343,12 @@
 .px-video-captions-submenu li.selected:before {
   content: '\2713';
 }
-.px-video-captions-btn-container label {
+.px-video-captions-btn-container label,
+.px-video-captions-btn-container button.px-video-btnCaptions {
   display: inline-block;
   width: 25px;
   height: 20px;
-  margin-top: 3px;
+  margin: 3px 0 0 0;
   background: no-repeat url("../images/px-video-sprite.svg");
   background-position: -6px -835px;
 }
@@ -357,25 +358,28 @@
     margin-top: 1px;
     margin-left: 10px;
   }
-  .px-video-captions-btn-container label {
+  .px-video-captions-btn-container label,
+  .px-video-captions-btn-container button.px-video-btnCaptions {
     margin-top: 4px;
   }
 }
-.px-video-captions-btn-container input[type="checkbox"]:focus+label {
-  outline: 1px #999 dotted;
-  background-position: -6px -799px;
-}
-.px-video-captions-btn-container input[type="checkbox"]:hover+label {
+
+.px-video-captions-btn-container input[type="checkbox"]:hover+label,
+.px-video-captions-btn-container button:hover {
   background-position: -6px -799px;
   cursor: pointer;
 }
-.px-video-captions-btn-container input[type="checkbox"]:focus+label {
+.px-video-captions-btn-container input[type="checkbox"]:focus+label,
+.px-video-captions-btn-container button:focus {
+  border: none;
   outline: 1px #999 dotted;
   background-position: -6px -799px;
 }
-.px-video-captions-btn-container input[type="checkbox"]:checked+label {
+.px-video-captions-btn-container input[type="checkbox"]:checked+label,
+.px-video-captions-btn-container button.selected {
   background-position: -6px -871px;
 }
+
 .px-video-volume-controls {
   float: right;
   overflow: visible;

@@ -127,7 +127,7 @@ function InitPxVideo(options) {
       }
       e.target.className += ' selected';
       e.target.setAttribute('aria-checked', true);
-      obj.captionsBtn.checked = !e.target.className.match(/px-video-captions-off/);
+      obj.captionsBtn.className = e.target.className.match(/px-video-captions-off/) ? 'px-video-btnCaptions' : 'px-video-btnCaptions selected';
       if (!!currentSubContainer) {
           currentSubContainer.className =  currentSubContainer.className.replace(/show\s*$/, "hide");
       }
@@ -163,9 +163,12 @@ function InitPxVideo(options) {
             captionsMenuItem.setAttribute('aria-checked', 'false');
           }
         }
+        obj.captionsBtn.className = 'px-video-btnCaptions selected';
+      }
+      else {
+        obj.captionsBtn.setAttribute("checked", "checked");
       }
       obj.captionsContainer.className = "px-video-captions show";
-      obj.captionsBtn.setAttribute("checked", "checked");
     }
     else if (obj.textTracks.length > 1) {
       var offOption = obj.captionsSubMenu.getElementsByClassName('px-video-captions-off')[0];
@@ -402,7 +405,6 @@ function InitPxVideo(options) {
   if (!obj.textTracks.length && options.debug) {
     console.log("No caption track found.");
   }
-
   else {
     if (options.debug) {
       console.log("Caption track found; URI: " + captionSrc);
@@ -445,6 +447,21 @@ function InitPxVideo(options) {
 
   // Determine if HTML5 textTracks is supported (for captions)
   obj.isTextTracks = !!obj.movie.textTracks;
+
+  if (obj.textTracks.length > 1) {
+    // Replace captions checkbox with button when multiple captions are present
+    var oldLabel = obj.captionsBtn.nextSibling,
+      newLabel = document.createElement('SPAN'),
+      newCaptionsBtn = document.createElement('BUTTON');
+    newLabel.textContent = oldLabel.textContent;
+    newLabel.className = 'sr-only';
+    newCaptionsBtn.className = 'px-video-btnCaptions';
+    newCaptionsBtn.id = 'btnCaptions' + obj.randomNum;
+    newCaptionsBtn.appendChild(newLabel);
+    obj.captionsBtnContainer.removeChild(oldLabel);
+    obj.captionsBtn.parentNode.replaceChild(newCaptionsBtn, obj.captionsBtn);
+    obj.captionsBtn = newCaptionsBtn;
+  }
 
   // Play
   obj.btnPlay.addEventListener('click', function() {
