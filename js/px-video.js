@@ -111,11 +111,13 @@ function InitPxVideo(options) {
       obj.captionsSubMenu.style.display = 'block';
       obj.captionsSubMenu.setAttribute('aria-hidden', 'false');
       obj.captionsBtn.setAttribute('aria-expanded', 'true');
+      obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item selected')[0].focus();
   }
   function hideCaptionsSubmenu() {
     obj.captionsSubMenu.style.display = 'none';
     obj.captionsSubMenu.setAttribute('aria-hidden', 'true');
     obj.captionsBtn.setAttribute('aria-expanded', 'false');
+    obj.captionsBtn.focus();
   }
 
   function handleCaptionSelection (e) {
@@ -141,7 +143,6 @@ function InitPxVideo(options) {
           obj.captionsContainer.className = "px-video-captions hide";
       }
       hideCaptionsSubmenu();
-      obj.captionsBtn.focus();
   }
 
   // Display captions container and button (for initialization)
@@ -644,7 +645,6 @@ function InitPxVideo(options) {
       if (obj.textTracks.length > 1) {
         if (obj.captionsSubMenu.style.display === 'none') {
           showCaptionsSubmenu();
-          obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item selected')[0].focus();
         }
         else {
           hideCaptionsSubmenu();
