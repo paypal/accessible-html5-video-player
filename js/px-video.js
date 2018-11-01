@@ -638,6 +638,12 @@ function InitPxVideo(options) {
       }
     }
   });
+  obj.captionsBtn.addEventListener('keypress', function(e) {
+    // crossbrowser hack - Firefox sets the default behavior on keypress not keydown
+    if (e.keyCode === 13 || e.keyCode === 32) {
+      e.preventDefault();
+    }
+  });
 
   // If no caption file exists, hide container for caption text
   if (!obj.textTracks.length) {
