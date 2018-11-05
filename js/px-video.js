@@ -299,7 +299,7 @@ function InitPxVideo(options) {
   }
 
   // Set debug mode
-  if (typeof(options.debug)==='undefined') {
+  if (typeof(options.debug) === 'undefined') {
     options.debug = false;
   }
   obj.debug = options.debug;
@@ -311,10 +311,10 @@ function InitPxVideo(options) {
 
   // Set up aria-label for Play button with the videoTitle option
   if ((typeof(options.videoTitle)==='undefined') || (options.videoTitle==="")) {
-    obj.playAriaLabel = "Play";
+    obj.playAriaLabel = GLOBAL_STRINGS['PLAY'];
   }
   else {
-    obj.playAriaLabel = "Play video, " + options.videoTitle;
+    obj.playAriaLabel = GLOBAL_STRINGS['PLAY'] + " " + options.videoTitle;
   }
 
   // Get the container, video element, and controls container
@@ -333,33 +333,34 @@ function InitPxVideo(options) {
     console.log("Inserting custom video controls");
   }
   obj.controls.innerHTML = '<div class="progress-bar">' +
-    '<progress class="px-video-progress" max="100" value="0"><span>0</span>% played</progress>' +
+    '<input type="range" class="px-video-progress" style="--min: 0; --max: 100; --val: 0;" max="100" value="0"/>' +
     '</div>' +
     '<div class="px-video-time">' +
       '<span class="sr-only">time</span> <span class="px-video-duration">00:00</span>' +
     '</div>' +
     '<div class="px-video-playback-buttons">' +
-      '<button class="px-video-restart"><span class="sr-only">Restart</span></button>' +
-      '<button class="px-video-rewind"><span class="sr-only">rewind <span class="px-seconds">10</span> seconds</span></button>' +
-      '<button class="px-video-play" aria-label="'+obj.playAriaLabel+'"><span class="sr-only">Play</span></button>' +
-      '<button class="px-video-pause hide"><span class="sr-only">Pause</span></button>' +
-      '<button class="px-video-forward"><span class="sr-only">forward <span class="px-seconds">10</span> seconds</span></button>' +
+      '<button class="px-video-restart"><span class="sr-only">' + GLOBAL_STRINGS['RESTART'] + '</span></button>' +
+      '<button class="px-video-rewind"><span class="sr-only">' + GLOBAL_STRINGS['REWIND'] + ' <span class="px-seconds">10</span>' + GLOBAL_STRINGS['SECONDS'] + '</span></button>' +
+      '<button class="px-video-play" aria-label="'+obj.playAriaLabel+'"><span class="sr-only">' + GLOBAL_STRINGS['PLAY'] + '</span></button>' +
+      '<button class="px-video-pause hide"><span class="sr-only">' + GLOBAL_STRINGS['PAUSE'] + '</span></button>' +
+      '<button class="px-video-forward"><span class="sr-only">' + GLOBAL_STRINGS['FORWARD'] + '<span class="px-seconds">10</span>' + GLOBAL_STRINGS['SECONDS'] + '</span></button>' +
     '</div>' +
     '<div class="px-video-volume-controls">' +
       '<div class="px-video-mute-btn-container">' +
         '<input class="px-video-mute sr-only" id="btnMute'+obj.randomNum+'" type="checkbox" />' +
-        '<label id="labelMute'+obj.randomNum+'" for="btnMute'+obj.randomNum+'"><span class="sr-only">Mute</span></label>' +
+        '<label id="labelMute'+obj.randomNum+'" for="btnMute'+obj.randomNum+'"><span class="sr-only">' + GLOBAL_STRINGS['MUTE'] + '</span></label>' +
       '</div>' +
       '<div class="px-video-volume-slider">' +
-        '<label for="volume'+obj.randomNum+'" class="sr-only">Volume:</label><input id="volume'+obj.randomNum+'" class="px-video-volume" type="range" min="0" max="10" value="5" />' +
+        '<label for="volume'+obj.randomNum+'" class="sr-only">Volume:</label>' +
+        '<input id="volume'+obj.randomNum+'" class="px-video-volume" type="range" min="0" max="10" value="5" />' +
       '</div>' +
       '<div class="px-video-captions-btn-container hide">' +
         '<input class="px-video-btnCaptions sr-only" id="btnCaptions'+obj.randomNum+'" type="checkbox" />' +
-        '<label for="btnCaptions'+obj.randomNum+'"><span class="sr-only">Captions</span></label>' +
+        '<label for="btnCaptions'+obj.randomNum+'"><span class="sr-only">' + GLOBAL_STRINGS['CAPTIONS'] + '</span></label>' +
       '</div>' +
       '<div class="px-video-fullscreen-btn-container show">' +
       '<input class="px-video-btnFullScreen sr-only" id="btnFullscreen'+obj.randomNum+'" type="checkbox" />' +
-      '<label for="btnFullscreen'+obj.randomNum+'"><span class="sr-only">Fullscreen</span></label>' +
+      '<label for="btnFullscreen'+obj.randomNum+'"><span class="sr-only">' + GLOBAL_STRINGS['TOGGLE_FULL_SCREEN'] + '</span></label>' +
     '</div>' +
     '</div>';
 
@@ -371,18 +372,18 @@ function InitPxVideo(options) {
   // obj.container.setAttribute("style", "width:" + obj.movieWidth + "px");
 
   // Adjust layout per width of video - controls/mute offset
-  obj.labelMute = document.getElementById("labelMute" + obj.randomNum);
+  obj.labelMute = document.getElementById('labelMute' + obj.randomNum);
   obj.labelMuteOffset = obj.movieWidth - 390;
-  if (obj.browserName==="Firefox") { // adjust for Firefox rendering
+  if (obj.browserName === 'Firefox') { // adjust for Firefox rendering
     obj.labelMuteOffset = obj.labelMuteOffset - 10;
   }
   if (obj.labelMuteOffset < 0) {
     obj.labelMuteOffset = 0;
   }
-  obj.labelMute.setAttribute("style", "margin-left:" + obj.labelMuteOffset + "px");
+  obj.labelMute.setAttribute('style', 'margin-left:' + obj.labelMuteOffset + 'px');
 
   // Get URL of caption file if exists
-  var captionSrc = "",
+  var captionSrc = '',
     kind,
     children = obj.movie.childNodes;
 
@@ -435,7 +436,6 @@ function InitPxVideo(options) {
   obj.btnVolume = obj.container.getElementsByClassName('px-video-volume')[0];
   obj.btnMute = obj.container.getElementsByClassName('px-video-mute')[0];
   obj.progressBar = obj.container.getElementsByClassName('px-video-progress')[0];
-  obj.progressBarSpan = obj.progressBar.getElementsByTagName('span')[0];
   obj.captionsContainer = obj.container.getElementsByClassName('px-video-captions')[0];
   obj.captionsBtn = obj.container.getElementsByClassName('px-video-btnCaptions')[0];
   obj.captionsBtnContainer = obj.container.getElementsByClassName('px-video-captions-btn-container')[0];
@@ -443,6 +443,21 @@ function InitPxVideo(options) {
   obj.txtSeconds = obj.container.getElementsByClassName('px-seconds');
   obj.fullScreenBtn = obj.container.getElementsByClassName('px-video-btnFullScreen')[0];
   obj.fullScreenBtnContainer = obj.container.getElementsByClassName('px-video-fullscreen-btn-container')[0];
+
+  
+  obj.progressBar.addEventListener('change', function (e) {
+    obj.progressBar.style.setProperty('--val', + obj.progressBar.value);
+
+    obj.pos = obj.progressBar.value / 100; //(e.pageX - this.offsetLeft) / this.offsetWidth;
+    obj.movie.currentTime = obj.pos * obj.movie.duration;
+
+    // Special handling for "manual" captions
+    if (!obj.isTextTracks) {
+      adjustManualCaptions(obj);
+    }
+
+  }, false);
+  
 
   // Update number of seconds in rewind and fast forward buttons
   obj.txtSeconds[0].innerHTML = obj.seekInterval;
@@ -567,20 +582,11 @@ function InitPxVideo(options) {
     obj.percent = (100 / obj.movie.duration) * obj.movie.currentTime;
     if (obj.percent > 0) {
       obj.progressBar.value = obj.percent;
-      obj.progressBarSpan.innerHTML = obj.percent;
     }
+
+    obj.progressBar.style.setProperty('--val', + obj.progressBar.value);
   }, false);
 
-  // Skip when clicking progress bar
-  obj.progressBar.addEventListener('click', function(e) {
-    obj.pos = (e.pageX - this.offsetLeft) / this.offsetWidth;
-    obj.movie.currentTime = obj.pos * obj.movie.duration;
-
-    // Special handling for "manual" captions
-    if (!obj.isTextTracks) {
-      adjustManualCaptions(obj);
-    }
-  });
 
   // Toggle display of fullscreen button
   obj.fullScreenBtn.addEventListener('click', function() { 
