@@ -1,4 +1,4 @@
-var GLOBAL_STRINGS = {
+export default {
   CAPTIONS: 'Closed captions',
   FORWARD: 'Forward',
   MUTE: 'Mute',
@@ -8,4 +8,4 @@ var GLOBAL_STRINGS = {
   REWIND: 'Rewind',
   SECONDS: 'Seconds',
   TOGGLE_FULL_SCREEN: 'Toggle full screen'
-};
+}

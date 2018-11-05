@@ -17,7 +17,7 @@ A lightweight HTML5 video player which includes support for captions and screen 
 - When JavaScript is unavailable, the browser's native controls are used.
 - React support
 
-## Implementation
+## Usage
 
 ### CSS and Image
 Insert the CSS in the Head of your HTML document. You'll also need to upload the sprite image (or use your own) and adjust the path in the CSS file.
@@ -48,21 +48,19 @@ Insert the HTML5 video markup in the Body of your HTML document. Replace the vid
 ```
 
 ### JavaScript
-Insert two JavaScript files right before the closing Body element of your HTML document. Add a Script element to initialize the video. Options are passed in `JSON` format. The options are:
 
-|  option | description  | dataType  |   | default   |
-|---|---|---|---|---|
-| videoId  | the value of the ID of the widget container  |  string | required  | |
-| captionsOnDefault  |  denotes whether to show or hide caption upon loading  | boolean  |  optional | `true`  |
-| seekInterval  | the number of seconds to rewind and fast forward  | number  | optional  |  10 |
-| videoTitle  | short title of video; used for aria-label attribute on Play button to clarify to screen reader user what will be played  | string  | optional  | Play  |
-| debug  |  turn console logs on or off | boolean  |  optional |  `false` |
+There are 3 different ways you can include the Javascript in your site.
+
+
+#### Script Globals
+If you don't use any kind of javascript module system, you can insert script directly into your HTML page.
+
+Insert the JavaScript file right before the closing Body element of your HTML document. Add a Script element to initialize the video. Options are passed in `JSON` format. The options are:
 
 ```html
-<script src="js/strings.js"></script>
-<script src="js/px-video.js"></script>
+<script src="/dist/px-video.global.js"></script>
 <script>
-// Initialize
+// initialize
 new InitPxVideo({
     "videoId": "myvid",
     "captionsOnDefault": true,
@@ -72,6 +70,53 @@ new InitPxVideo({
 });
 </script>
 ```
+
+#### CommonJS (Node)
+If you're in Node.js or just using commonjs in general, you can `require()` the video player.
+
+First `npm install accessible-html5-video-player` to get it into your project, then:
+
+```javascript
+var InitPxVideo = require('accessible-html5-video-player');
+
+
+// initialize
+new InitPxVideo({
+    "videoId": "myvid",
+    "captionsOnDefault": true,
+    "seekInterval": 20,
+    "videoTitle": "clips of stand-up comedy",
+    "debug": true
+});
+```
+
+#### ES Modules
+If you're using the super-modern es modules syntax you can `import` the video player.
+
+First `npm install accessible-html5-video-player` to get it into your project, then:
+
+```javascript
+import InitPxVideo from 'accessible-html5-video-player';
+
+// initialize
+new InitPxVideo({
+    "videoId": "myvid",
+    "captionsOnDefault": true,
+    "seekInterval": 20,
+    "videoTitle": "clips of stand-up comedy",
+    "debug": true
+});
+```
+
+### Configuration Options
+|  option | description  | dataType  |   | default   |
+|---|---|---|---|---|
+| videoId  | the value of the ID of the widget container  |  string | required  | |
+| captionsOnDefault  |  denotes whether to show or hide caption upon loading  | boolean  |  optional | `true`  |
+| seekInterval  | the number of seconds to rewind and fast forward  | number  | optional  |  10 |
+| videoTitle  | short title of video; used for aria-label attribute on Play button to clarify to screen reader user what will be played  | string  | optional  | Play  |
+| debug  |  turn console logs on or off | boolean  |  optional |  `false` |
+
 
 ### [View Demo](http://paypal.github.io/accessible-html5-video-player/)
 
@@ -100,12 +145,14 @@ The React version has been designed to be integrated into your react codebase ea
   debug={true}
 />
 ```
-A demo could be reached at: [View Demo](http://paypal.github.io/accessible-html5-video-player/index.react.html)
+
+[View React Demo](http://paypal.github.io/accessible-html5-video-player/index.react.html)
+
 
 ## Development
-```
-npm install // install dependencies
-npm run react // transpile .jsx into valid .js using Babel
+```bash
+npm install   # install dependencies
+npm run react # transpile .jsx into valid .js using Babel
 ```
 
 ## Feedback and Contributions
@@ -126,7 +173,7 @@ If you experience any errors or if you have ideas for improvement, please feel f
 - Safari: full support.
 - Firefox: full support.
 - Internet Explorer 10, 11: full support.
-- Internet Explorer 9: native video player used (aesthetic choice since HTML5 range input and progress element are not supported).
+- Internet Explorer 9: native video player used (aesthetic choice since HTML5 range input is unsupported).
 - Internet Explorer 8: renders fallback content of video element (in the demo, this is an image linked to the video file).
 - Smartphones and tablets: controls and captions are not customized as both are natively supported in latest versions.
 

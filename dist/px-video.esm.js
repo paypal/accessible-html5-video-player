@@ -1,6 +1,16 @@
-function InitPxVideo(options) {
+var GLOBAL_STRINGS = {
+  CAPTIONS: 'Closed captions',
+  FORWARD: 'Forward',
+  MUTE: 'Mute',
+  PAUSE: 'Pause',
+  PLAY: 'Play',
+  RESTART: 'Restart',
+  REWIND: 'Rewind',
+  SECONDS: 'Seconds',
+  TOGGLE_FULL_SCREEN: 'Toggle full screen'
+};
 
-  "use strict";
+function InitPxVideo (options) {
 
   // Utilities for caption time codes
   function video_timecode_min(tc) {
@@ -839,3 +849,5 @@ function InitPxVideo(options) {
     fullScreenStyles();
   }, false);
 }
+
+export default InitPxVideo;
