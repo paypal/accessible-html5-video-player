@@ -131,7 +131,6 @@ If you experience any errors or if you have ideas for improvement, please feel f
 - Smartphones and tablets: controls and captions are not customized as both are natively supported in latest versions.
 
 ## Limitations and Known Issues
-- Currently, only one caption file per video is supported.
 - Only VTT caption files are supported (not SRT nor TTML). VTT cue settings are not supported but inline styles function (see first few lines of example).
 - The controls have a minimum width of 360px.
 

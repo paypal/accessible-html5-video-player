@@ -4,14 +4,12 @@ function InitPxVideo(options) {
 
   // Utilities for caption time codes
   function video_timecode_min(tc) {
-    var tcpair = [];
-    tcpair = tc.split(' --> ');
+    var tcpair = tc.split(' --> ');
     return videosub_tcsecs(tcpair[0]);
   }
 
   function video_timecode_max(tc) {
-    var tcpair = [];
-    tcpair = tc.split(' --> ');
+    var tcpair = tc.split(' --> ');
     return videosub_tcsecs(tcpair[1]);
   }
 
@@ -20,11 +18,9 @@ function InitPxVideo(options) {
       return 0;
     }
     else {
-      var tc1 = [],
-        tc2 = [],
-        seconds;
-      tc1 = tc.split(',');
-      tc2 = tc1[0].split(':');
+      var seconds,
+        tc1 = tc.split(','),
+        tc2 = tc1[0].split(':');
       seconds = Math.floor(tc2[0]*60*60) + Math.floor(tc2[1]*60) + Math.floor(tc2[2]);
       return seconds;
     }
@@ -32,14 +28,121 @@ function InitPxVideo(options) {
 
   // For "manual" captions, adjust caption position when play time changed (via rewind, clicking progress bar, etc.)
   function adjustManualCaptions(obj) {
-    obj.subcount = 0;
-    while (video_timecode_max(obj.captions[obj.subcount][0]) < obj.movie.currentTime.toFixed(1)) {
-      obj.subcount++;
-      if (obj.subcount > obj.captions.length-1) {
-        obj.subcount = obj.captions.length-1;
-        break;
-      }
+    for (i=0; i < obj.textTracks.length; i++) {
+        var thisTrack = obj.textTracks[i];
+        thisTrack.subcount = 0;
+        while (video_timecode_max(thisTrack.manualCaptions[thisTrack.subcount][0]) < obj.movie.currentTime.toFixed(1)) {
+            thisTrack.subcount++;
+            if (thisTrack.subcount > thisTrack.manualCaptions.length-1) {
+                thisTrack.subcount = thisTrack.manualCaptions.length-1;
+                break;
+            }
+        }
     }
+  }
+  function renderManualCaptions (index) {
+    var thisTrack = obj.textTracks[index];
+    // Check if the next caption is in the current time range
+    if (obj.movie.currentTime.toFixed(1) > video_timecode_min(thisTrack.manualCaptions[thisTrack.subcount][0]) &&
+        obj.movie.currentTime.toFixed(1) < video_timecode_max(thisTrack.manualCaptions[thisTrack.subcount][0])) {
+        thisTrack.currentCaption = thisTrack.manualCaptions[thisTrack.subcount][1];
+    }
+    // Is there a next timecode?
+    if (obj.movie.currentTime.toFixed(1) > video_timecode_max(thisTrack.manualCaptions[thisTrack.subcount][0]) &&
+        thisTrack.subcount < (thisTrack.manualCaptions.length-1)) {
+        thisTrack.subcount++;
+    }
+    // Render the caption
+    if (obj.textTracks.length > 1) {
+        obj.captionsSubContainers[thisTrack.label].innerHTML = thisTrack.currentCaption;
+    }
+    else {
+      obj.captionsContainer.innerHTML = thisTrack.currentCaption;
+    }
+  }
+  function requestCaption (vttSrc, index) {
+      // Create XMLHttpRequest object
+      var xhr;
+      if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+      } else if (window.ActiveXObject) { // IE8
+        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      (function(index){ // iife to copy index as value
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              if (options.debug) {
+                console.log("xhr = 200");
+              }
+
+              var thisTrack = obj.textTracks[index],
+                record,
+                req = xhr.responseText.replace(/\r\n/g, '\n'), //ensure unix line endings
+                records = req.split('\n\n');
+              for (var r=0; r < records.length; r++) {
+                record = records[r];
+                thisTrack.manualCaptions[r] = [];
+                thisTrack.manualCaptions[r] = record.split('\n');
+                if (thisTrack.manualCaptions[r].length === 3) {
+                  // some vtt files have a line to denote an index for each caption
+                  thisTrack.manualCaptions[r].shift();
+                }
+              }
+              // Remove first element ("VTT")
+              thisTrack.manualCaptions.shift();
+
+              if (options.debug) {
+                console.log('Successfully loaded the caption file via ajax.');
+              }
+            } else {
+              if (options.debug) {
+                console.log('There was a problem loading the caption file via ajax.');
+              }
+            }
+          }
+        };
+      }(index));
+      xhr.open("get", vttSrc, true);
+      xhr.send();
+  }
+
+  function showCaptionsSubmenu() {
+      obj.captionsSubMenu.style.display = 'block';
+      obj.captionsSubMenu.setAttribute('aria-hidden', 'false');
+      obj.captionsBtn.setAttribute('aria-expanded', 'true');
+      obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item selected')[0].focus();
+  }
+  function hideCaptionsSubmenu() {
+    obj.captionsSubMenu.style.display = 'none';
+    obj.captionsSubMenu.setAttribute('aria-hidden', 'true');
+    obj.captionsBtn.setAttribute('aria-expanded', 'false');
+    obj.captionsBtn.focus();
+  }
+
+  function handleCaptionSelection (e) {
+      var allMenuItems = obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item'),
+          currentSubContainer = obj.captionsContainer.getElementsByClassName('px-video-captions-sub-container show')[0],
+          pendingSubContainer = obj.captionsSubContainers[e.target.textContent];
+      for (var i = 0; i < allMenuItems.length; i++) {
+          //first deselect all menu items
+          allMenuItems[i].className = allMenuItems[i].className.replace(/selected\s*$/, "");
+          allMenuItems[i].setAttribute('aria-checked', 'false');
+      }
+      e.target.className += ' selected';
+      e.target.setAttribute('aria-checked', true);
+      obj.captionsBtn.className = e.target.className.match(/px-video-captions-off/) ? 'px-video-btnCaptions' : 'px-video-btnCaptions selected';
+      if (!!currentSubContainer) {
+          currentSubContainer.className =  currentSubContainer.className.replace(/show\s*$/, "hide");
+      }
+      if (e.target.textContent.toLowerCase() !== 'off') {
+          pendingSubContainer.className = pendingSubContainer.className.replace(/hide\s*$/, 'show');
+          obj.captionsContainer.className = "px-video-captions show";
+      }
+      else {
+          obj.captionsContainer.className = "px-video-captions hide";
+      }
+      hideCaptionsSubmenu();
   }
 
   // Display captions container and button (for initialization)
@@ -47,18 +150,41 @@ function InitPxVideo(options) {
     obj.captionsBtnContainer.className = "px-video-captions-btn-container show";
     obj.captionsContainer.parentNode.parentNode.className = "has-captions";
     if (obj.isCaptionDefault) {
+      if (obj.textTracks.length > 1) {
+        var defaultCaptionsSubContainer;
+        for (var i=0; i < obj.textTracks.length; i++) {
+          var captionsSubContainer = document.getElementById('px-video-captions-sub-container-' + obj.textTracks[i].id),
+            captionsMenuItem = obj.captionsBtnContainer.getElementsByClassName('px-video-caption-submenu-item')[i];
+          if (obj.textTracks[i].default && defaultCaptionsSubContainer === undefined) {
+            captionsSubContainer.className += ' show';
+            defaultCaptionsSubContainer = captionsSubContainer;
+            captionsMenuItem.className += ' selected';
+            captionsMenuItem.setAttribute('aria-checked', 'true');
+          }
+          else {
+            captionsSubContainer.className += ' hide';
+            captionsMenuItem.setAttribute('aria-checked', 'false');
+          }
+        }
+        obj.captionsBtn.className = 'px-video-btnCaptions selected';
+      }
+      else {
+        obj.captionsBtn.setAttribute("checked", "checked");
+      }
       obj.captionsContainer.className = "px-video-captions show";
-      obj.captionsBtn.setAttribute("checked", "checked");
+    }
+    else if (obj.textTracks.length > 1) {
+      var offOption = obj.captionsSubMenu.getElementsByClassName('px-video-captions-off')[0];
+      offOption.className += ' selected';
+      offOption.setAttribute('aria-checked', 'true');
     }
   }
 
   // Unfortunately, due to scattered support, browser sniffing is required
   function browserSniff() {
-    var nVer = navigator.appVersion,
-      nAgt = navigator.userAgent,
+    var nAgt = navigator.userAgent,
       browserName = navigator.appName,
       fullVersion = ''+parseFloat(navigator.appVersion),
-      majorVersion = parseInt(navigator.appVersion,10),
       nameOffset,
       verOffset,
       ix;
@@ -95,7 +221,7 @@ function InitPxVideo(options) {
     else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) < (verOffset=nAgt.lastIndexOf('/')) ) {
       browserName = nAgt.substring(nameOffset,verOffset);
       fullVersion = nAgt.substring(verOffset+1);
-      if (browserName.toLowerCase()==browserName.toUpperCase()) {
+      if (browserName.toLowerCase() === browserName.toUpperCase()) {
         browserName = navigator.appName;
       }
     }
@@ -107,9 +233,8 @@ function InitPxVideo(options) {
       fullVersion=fullVersion.substring(0,ix);
     }
     // Get major version
-    majorVersion = parseInt(''+fullVersion,10);
+    var majorVersion = parseInt(''+fullVersion,10);
     if (isNaN(majorVersion)) {
-      fullVersion = ''+parseFloat(navigator.appVersion);
       majorVersion = parseInt(navigator.appVersion,10);
     }
     // Return data
@@ -164,13 +289,13 @@ function InitPxVideo(options) {
   // If IE8, stop customization (use fallback)
   // If IE9, stop customization (use native controls)
   if (obj.browserName === "IE" && (obj.browserMajorVersion === 8 || obj.browserMajorVersion === 9) ) {
-    return false;
+    return;
   }
 
   // If smartphone or tablet, stop customization as video (and captions in latest devices) are handled natively
   obj.isSmartphoneOrTablet = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
   if (obj.isSmartphoneOrTablet) {
-    return false;
+    return;
   }
 
   // Set debug mode
@@ -262,22 +387,27 @@ function InitPxVideo(options) {
     kind,
     children = obj.movie.childNodes;
 
-  for (var i = 0; i < children.length; i++) {
+  obj.textTracks = [];
+  for (var i=0; i < children.length; i++) {
     if (children[i].nodeName.toLowerCase() === 'track') {
       kind = children[i].getAttribute('kind');
-      if (kind === 'captions') {
+      if (kind === 'captions' || kind === 'subtitles' || kind === 'descriptions') {
         captionSrc = children[i].getAttribute('src');
+        obj.textTracks.push({
+          src: captionSrc,
+          kind: kind,
+          label: children[i].getAttribute('label'),
+          id: children[i].getAttribute('label').trim().replace(/\s+/, '-') +  + obj.randomNum,
+          srclang: children[i].getAttribute('srclang'),
+          default: children[i].hasAttribute('default')
+        });
       }
     }
   }
 
   // Record if caption file exists or not
-  obj.captionExists = true;
-  if (captionSrc === "") {
-    obj.captionExists = false;
-    if (options.debug) {
-      console.log("No caption track found.");
-    }
+  if (!obj.textTracks.length && options.debug) {
+    console.log("No caption track found.");
   }
   else {
     if (options.debug) {
@@ -334,9 +464,23 @@ function InitPxVideo(options) {
   obj.txtSeconds[1].innerHTML = obj.seekInterval;
 
   // Determine if HTML5 textTracks is supported (for captions)
-  obj.isTextTracks = false;
-  if (obj.movie.textTracks) {
-    obj.isTextTracks = true;
+  obj.isTextTracks = !!obj.movie.textTracks;
+
+  if (obj.textTracks.length > 1) {
+    // Replace captions checkbox with button when multiple captions are present
+    var oldLabel = obj.captionsBtn.nextElementSibling,
+      newLabel = document.createElement('SPAN'),
+      newCaptionsBtn = document.createElement('BUTTON');
+    newLabel.textContent = oldLabel.textContent;
+    newLabel.className = 'sr-only';
+    newCaptionsBtn.className = 'px-video-btnCaptions';
+    newCaptionsBtn.id = 'btnCaptions' + obj.randomNum;
+    newCaptionsBtn.appendChild(newLabel);
+    newCaptionsBtn.setAttribute('aria-expanded', 'false');
+    newCaptionsBtn.setAttribute('aria-haspopup', 'menu');
+    obj.captionsBtnContainer.removeChild(oldLabel);
+    obj.captionsBtn.parentNode.replaceChild(newCaptionsBtn, obj.captionsBtn);
+    obj.captionsBtn = newCaptionsBtn;
   }
 
   // Play
@@ -409,31 +553,16 @@ function InitPxVideo(options) {
 
   // Mute
   obj.btnMute.addEventListener('click', function() {
-    if (obj.movie.muted === true) {
-      obj.movie.muted = false;
-    }
-    else {
-      obj.movie.muted = true;
-    }
+    obj.movie.muted = !obj.movie.muted;
   }, false);
  
   obj.btnMute.onkeypress = function(e) {
-    if(e.keyCode == 13){ // enter key
+    if(e.keyCode === 13){ // enter key
       e.preventDefault();
-      if (this.checked == true) {
-        this.checked = false;
-      }
-      else {
-        this.checked = true;
-      }
-      if (obj.movie.muted === true) {
-        obj.movie.muted = false;
-      }
-      else {
-        obj.movie.muted = true;
-      }
+      this.checked = !this.checked;
+      obj.movie.muted = !obj.movie.muted;
     }
-  }
+  };
 
   // Duration
   obj.movie.addEventListener("timeupdate", function() {
@@ -468,9 +597,9 @@ function InitPxVideo(options) {
     }
   }, false);
   obj.fullScreenBtn.onkeypress = function(e) {
-    if (e.keyCode == 13){ // enter key
+    if (e.keyCode === 13){ // enter key
       e.preventDefault();
-      if (this.checked == true) {
+      if (this.checked) {
         this.checked = false;
         exitFullScreen();
       }
@@ -479,56 +608,142 @@ function InitPxVideo(options) {
         launchFullScreen(obj.container);
       }
     }
-  }
+  };
 
   // Clear captions at end of video
   obj.movie.addEventListener('ended', function() {
-    obj.captionsContainer.innerHTML = "";
+    if (obj.textTracks.length > 1) {
+      for (var i=0; i < obj.textTracks.length; i++) {
+        obj.captionsContainer.getElementsByClassName('px-video-captions-sub-container')[i].innerHTML = '';
+      }
+    }
+    else {
+      obj.captionsContainer.innerHTML = '';
+    }
   });
+
 
   // ***
   // Captions
   // ***
 
   // Toggle display of captions via captions button
-  obj.captionsBtn.addEventListener('click', function() { 
+  obj.captionsBtn.addEventListener('click', function(e) {
+    if (obj.textTracks.length > 1) {
+      obj.captionsSubMenu.style.display === 'none' ? showCaptionsSubmenu() : hideCaptionsSubmenu();
+      e.preventDefault();
+      return;
+    }
     if (this.checked) {
-      obj.captionsContainer.className = "px-video-captions show";
+        obj.captionsContainer.className = "px-video-captions show";
     } else {
-      obj.captionsContainer.className = "px-video-captions hide";
+        obj.captionsContainer.className = "px-video-captions hide";
     }
     // if fullscreen add fullscreen class
     if (document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen || document.msFullscreenElement) {
-      var currClass = obj.captionsContainer.className;
-      obj.captionsContainer.className = currClass + ' js-fullscreen-captions';
+        var currClass = obj.captionsContainer.className;
+        obj.captionsContainer.className = currClass + ' js-fullscreen-captions';
     }
   }, false);
-  obj.captionsBtn.onkeypress = function(e) {
-    if (e.keyCode == 13){ // enter key
+  obj.captionsBtn.addEventListener('keydown', function(e) {
+    if (e.keyCode === 13 || e.keyCode === 32){ // enter key or spacebar
       e.preventDefault();
-      if (this.checked == true) {
-        this.checked = false;
+      if (obj.textTracks.length > 1) {
+        if (obj.captionsSubMenu.style.display === 'none') {
+          showCaptionsSubmenu();
+        }
+        else {
+          hideCaptionsSubmenu();
+        }
+        return;
       }
-      else {
-        this.checked = true;
-      }
+      this.checked = !this.checked;
       if (this.checked) {
         obj.captionsContainer.className = "px-video-captions show";
       } else {
         obj.captionsContainer.className = "px-video-captions hide";
       }
     }
-  }
+  });
+  obj.captionsBtn.addEventListener('keypress', function(e) {
+    // crossbrowser hack - Firefox sets the default behavior on keypress not keydown
+    if (e.keyCode === 13 || e.keyCode === 32) {
+      e.preventDefault();
+    }
+  });
 
   // If no caption file exists, hide container for caption text
-  if (!obj.captionExists) {
+  if (!obj.textTracks.length) {
     obj.captionsContainer.className = "px-video-captions hide";
   }
 
   // If caption file exists, process captions
   else {
 
-    // Can't use native captioning in the follow browsers:
+    //make the submenu and caption subcontainers for multiple tracks
+    if (obj.textTracks.length > 1) {
+      obj.captionsSubMenu = document.createElement('UL');
+      obj.captionsSubMenu.className = 'px-video-captions-submenu';
+      obj.captionsSubMenu.setAttribute('role', 'menu');
+      obj.captionsSubMenu.style.display = 'none';
+      obj.captionsBtnContainer.appendChild(obj.captionsSubMenu);
+      obj.captionsSubContainers = {};
+      var listItemTrack;
+      for (j=0; j <= obj.textTracks.length; j++) {
+        //looping one extra time to do the stuff for 'Off' option
+        listItemTrack = document.createElement('LI');
+        if (j < obj.textTracks.length) {
+          var captionSubContainer = document.createElement('DIV');
+          captionSubContainer.id = 'px-video-captions-sub-container-' + obj.textTracks[j].id;
+          captionSubContainer.className = 'px-video-captions-sub-container';
+          obj.captionsSubContainers[obj.textTracks[j].label] = captionSubContainer;
+          obj.captionsContainer.appendChild(captionSubContainer);
+        }
+        listItemTrack.textContent = (j < obj.textTracks.length) ? obj.textTracks[j].label : 'Off';
+        listItemTrack.className = 'px-video-caption-submenu-item' + ( j < obj.textTracks.length ? '' : ' px-video-captions-off' );
+        listItemTrack.setAttribute('role', 'menuitemradio');
+        listItemTrack.setAttribute('aria-checked', 'false');
+        listItemTrack.setAttribute('tabindex', '-1');
+        obj.captionsSubMenu.appendChild(listItemTrack);
+        listItemTrack.addEventListener('click', handleCaptionSelection);
+        listItemTrack.addEventListener('keydown', function (e) {
+          e.stopPropagation();
+          if (e.keyCode === 13) { // enter key
+            handleCaptionSelection(e);
+            return;
+          }
+          if (e.keyCode === 27) { // esc key
+            hideCaptionsSubmenu();
+            return;
+          }
+          var items = obj.captionsSubMenu.getElementsByClassName('px-video-caption-submenu-item'),
+            first = items[0],
+            last = items[items.length-1];
+          if (e.keyCode === 38) { // up-arrow key
+            if (this === first) {
+              last.focus();
+            }
+            else {
+              this.previousElementSibling.focus();
+            }
+            return;
+          }
+          if (e.keyCode === 40) { // down-arrow key
+            if (this === last) {
+              first.focus();
+            }
+            else {
+              this.nextElementSibling.focus();
+            }
+          }
+        });
+      }
+    }
+
+    var track = {},
+      tracks;
+
+      // Can't use native captioning in the follow browsers:
     if ((obj.browserName==="IE" && obj.browserMajorVersion===10) || 
         (obj.browserName==="IE" && obj.browserMajorVersion===11) || 
         (obj.browserName==="Firefox" && obj.browserMajorVersion>=31) || 
@@ -541,9 +756,8 @@ function InitPxVideo(options) {
       obj.isTextTracks = false;
 
       // turn off native caption rendering to avoid double captions [doesn't work in Safari 7; see patch below]
-      var track = {};
-      var tracks = obj.movie.textTracks;
-      for (var j=0; j < tracks.length; j++) {
+      tracks = obj.movie.textTracks;
+      for (j=0; j < tracks.length; j++) {
         track = obj.movie.textTracks[j];
         track.mode = "hidden";
       }
@@ -556,8 +770,7 @@ function InitPxVideo(options) {
       }
       showCaptionContainerAndButton(obj);
 
-      var track = {};
-      var tracks = obj.movie.textTracks;
+      tracks = obj.movie.textTracks;
       for (var j=0; j < tracks.length; j++) {
         track = obj.movie.textTracks[j];
         track.mode = "hidden";
@@ -565,7 +778,13 @@ function InitPxVideo(options) {
           track.addEventListener("cuechange",function() {
             if (this.activeCues[0]) {
               if (this.activeCues[0].hasOwnProperty("text") || this.activeCues[0].text !== "") {
-                obj.captionsContainer.innerHTML = this.activeCues[0].text;
+                if (obj.textTracks.length > 1) {
+                  var subContainer = document.getElementById('px-video-captions-sub-container-' + this.label.trim().replace(/\s+/, '-') +  + obj.randomNum);
+                  subContainer.innerHTML = this.activeCues[0].text;
+                }
+                else {
+                  obj.captionsContainer.innerHTML = this.activeCues[0].text;
+                }
               }
             }
           },false);
@@ -579,73 +798,26 @@ function InitPxVideo(options) {
       }
       showCaptionContainerAndButton(obj);
 
-      // Render captions from array at appropriate time
-      obj.currentCaption = '';
-      obj.subcount = 0;
-      obj.captions = [];
+      for (j=0; j<obj.textTracks.length; j++) {
+        // Render captions from array at appropriate time
+        obj.textTracks[j].currentCaption = '';
+        obj.textTracks[j].subcount = 0;
+        obj.textTracks[j].manualCaptions = [];
 
-      obj.movie.addEventListener('timeupdate', function() {
-        // Check if the next caption is in the current time range
-        if (obj.movie.currentTime.toFixed(1) > video_timecode_min(obj.captions[obj.subcount][0]) &&
-          obj.movie.currentTime.toFixed(1) < video_timecode_max(obj.captions[obj.subcount][0])) {
-            obj.currentCaption = obj.captions[obj.subcount][1];
-        }
-        // Is there a next timecode?
-        if (obj.movie.currentTime.toFixed(1) > video_timecode_max(obj.captions[obj.subcount][0]) &&
-          obj.subcount < (obj.captions.length-1)) {
-            obj.subcount++;
-        }
-        // Render the caption
-        obj.captionsContainer.innerHTML = obj.currentCaption;
-      }, false);
+        (function(k) { // iife to copy j as value
+          obj.movie.addEventListener('timeupdate', function () {
+            renderManualCaptions(k);
+          }, false);
+        }(j));
 
-      if (captionSrc != "") {
-        // Create XMLHttpRequest object
-        var xhr;
-        if (window.XMLHttpRequest) {
-          xhr = new XMLHttpRequest();
-        } else if (window.ActiveXObject) { // IE8
-          xhr = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-              if (options.debug) {
-                console.log("xhr = 200");
-              }
-
-              obj.captions = [];
-              var records = [],
-                record,
-                req = xhr.responseText;
-              records = req.split('\n\n');
-              for (var r=0; r < records.length; r++) {
-                record = records[r];
-                obj.captions[r] = [];
-                obj.captions[r] = record.split('\n');
-              }
-              // Remove first element ("VTT")
-              obj.captions.shift();
-
-              if (options.debug) {
-                console.log('Successfully loaded the caption file via ajax.');
-              }
-            } else {
-              if (options.debug) {
-                console.log('There was a problem loading the caption file via ajax.');
-              }
-            }
-          }
-        }
-        xhr.open("get", captionSrc, true);
-        xhr.send();
+        requestCaption(obj.textTracks[j].src, j);
       }
     }
 
     // If Safari 7, removing track from DOM [see 'turn off native caption rendering' above]
     if (obj.browserName === "Safari" && obj.browserMajorVersion === 7) {
       console.log("Safari 7 detected; removing track from DOM");
-      var tracks = obj.movie.getElementsByTagName("track");
+      tracks = obj.movie.getElementsByTagName("track");
       obj.movie.removeChild(tracks[0]);
     }
 
@@ -666,4 +838,4 @@ function InitPxVideo(options) {
   document.addEventListener("msfullscreenchange", function () {
     fullScreenStyles();
   }, false);
-};
+}
