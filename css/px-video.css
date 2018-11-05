@@ -91,6 +91,8 @@
   }
 }
 .px-video-controls {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 300;
   margin-bottom: 10px;
   margin-top: 10px;
 }
@@ -119,7 +121,6 @@
   background-color: #009cdf;
 }
 .px-video-time {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   float: right;
   line-height: 30px;
   margin-top: -30px;
@@ -303,6 +304,55 @@
 }
 .px-video-captions-btn-container {
   float: left;
+  position: relative;
+}
+.px-video-captions-submenu {
+  display: none;
+  position: absolute;
+  bottom: 16px;
+  right: 0;
+  padding: 6px 0;
+  border-radius: 2px;
+  background-color: #ffffff;
+  box-shadow: 1px 1px 8px 2px #444444;
+  list-style-type: none;
+  white-space: nowrap;
+}
+.px-video-captions-submenu li {
+  cursor: pointer;
+  padding: 8px 16px;
+}
+.px-video-captions-submenu li:hover {
+  background-color: #e6e6e6;
+}
+.px-video-captions-submenu li:focus {
+  background-color: #e6e6e6;
+  outline: 1px #999 dotted;
+}
+
+.px-video-captions-submenu li.selected {
+  cursor: default;
+  background-color: #009cdf;
+  color: #ffffff;
+}
+.px-video-captions-submenu li:before {
+  content: '';
+  width: 20px;
+  display: inline-block;
+}
+.px-video-captions-submenu li.selected:before {
+  content: '\2713';
+}
+.px-video-captions-btn-container label,
+.px-video-captions-btn-container button.px-video-btnCaptions {
+  display: inline-block;
+  width: 25px;
+  height: 20px;
+  margin: 3px 0 0 0;
+  background: no-repeat url("../images/px-video-sprite.svg");
+  background-position: -6px -835px;
+  border: none;
+  vertical-align: middle;
 }
 @media only screen and (min-width: 540px) {
   .px-video-captions-btn-container {
@@ -310,38 +360,31 @@
     margin-top: 1px;
     margin-left: 10px;
   }
-}
-.px-video-captions-btn-container label {
-  display: inline-block;
-  width: 25px;
-  height: 20px;
-  margin-top: 3px;
-  background: no-repeat url("../images/px-video-sprite.svg");
-  background-position: -6px -835px;
-}
-@media only screen and (min-width: 540px) {
-  .px-video-captions-btn-container label {
+  .px-video-captions-btn-container label,
+  .px-video-captions-btn-container button.px-video-btnCaptions {
     margin-top: 4px;
   }
 }
-.px-video-captions-btn-container input[type="checkbox"]:focus+label {
-  outline: 1px #999 dotted;
-  background-position: -6px -799px;
-}
-.px-video-captions-btn-container input[type="checkbox"]:hover+label {
+
+.px-video-captions-btn-container input[type="checkbox"]:hover+label,
+.px-video-captions-btn-container button:hover {
   background-position: -6px -799px;
   cursor: pointer;
 }
-.px-video-captions-btn-container input[type="checkbox"]:focus+label {
+.px-video-captions-btn-container input[type="checkbox"]:focus+label,
+.px-video-captions-btn-container button:focus {
+  border: none;
   outline: 1px #999 dotted;
   background-position: -6px -799px;
 }
-.px-video-captions-btn-container input[type="checkbox"]:checked+label {
+.px-video-captions-btn-container input[type="checkbox"]:checked+label,
+.px-video-captions-btn-container button.selected {
   background-position: -6px -871px;
 }
+
 .px-video-volume-controls {
   float: right;
-  overflow: hidden;
+  overflow: visible;
   min-width: 133px;
 }
 @media only screen and (min-width: 540px) {
