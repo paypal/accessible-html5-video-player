@@ -1,4 +1,3 @@
-@charset "UTF-8";
 @media only screen and (min-width: 620px) {
   .custom-controls .transcript-link {
     margin-top: -44px;
@@ -7,26 +6,21 @@
 .transcript-single {
   border-bottom: 2px solid black-thirty;
 }
-
 .transcript-single.hidden {
   display: none;
 }
-
 .session--watch {
   margin-bottom: HalfLineHeight;
 }
-
 .session--watch .button {
   background: black-sixty;
   margin-top: QuarterLineHeight;
 }
-
 .session--watch .button:hover,
 .session--watch .button:active,
 .session--watch .button:focus {
   background: black-seventy;
 }
-
 .sr-only {
   position: absolute !important;
   clip: rect(1px, 1px, 1px, 1px);
@@ -36,26 +30,21 @@
   width: 1px !important;
   overflow: hidden;
 }
-
 .hide {
   display: none;
 }
-
 .show-inline {
   display: inline-block;
 }
-
 .px-video-container {
   overflow: hidden;
   min-width: 300px;
 }
-
 .px-video-img-captions-container {
   position: relative;
   padding-bottom: 56.25%;
   height: 0;
 }
-
 .px-video {
   position: absolute;
   top: 0;
@@ -64,22 +53,18 @@
   width: 100%;
   height: 100%;
 }
-
 .px-video-img-captions-container * {
   box-sizing: border-box;
 }
-
 .px-video-img-captions-container {
   position: relative;
 }
-
 .px-video-wrapper {
   position: relative;
   padding-bottom: 56.25%;
   height: 0;
   z-index: 1;
 }
-
 .px-video {
   position: absolute;
   top: 0;
@@ -87,11 +72,9 @@
   width: 100%;
   height: 100%;
 }
-
 .progress-bar {
   width: 85%;
 }
-
 @media only screen and (min-width: 480px) {
   .progress-bar {
     width: 89%;
@@ -113,7 +96,6 @@
   margin-bottom: 10px;
   margin-top: 10px;
 }
-
 .px-video-controls:after {
   display: block;
   font-size: 0;
@@ -129,7 +111,6 @@
   margin-top: -30px;
   font-size: 14px;
 }
-
 .px-video-captions {
   box-sizing: border-box;
   position: absolute;
@@ -145,13 +126,11 @@
   opacity: 0.75;
   z-index: 2;
 }
-
 .px-video-playback-buttons {
   float: left;
   line-height: 20px;
   min-width: 145px;
 }
-
 @media only screen and (min-width: 620px) {
   .px-video-playback-buttons {
     float: none;
@@ -172,7 +151,6 @@
   overflow: hidden;
   background: no-repeat url("../images/px-video-sprite.svg");
 }
-
 @media only screen and (min-width: 620px) {
   .px-video-controls button {
     background-size: 150%;
@@ -180,23 +158,20 @@
     height: 40px;
   }
 }
+
 .px-video-controls button:focus {
   border: 1px #999 dotted;
 }
-
 .px-video-controls button {
   cursor: pointer;
 }
-
 .px-video-controls button.px-video-restart {
   background-position: -9px -331px;
 }
-
 .px-video-controls button.px-video-restart:hover,
 .px-video-controls button.px-video-restart:focus {
   background-position: -9px -295px;
 }
-
 @media only screen and (min-width: 620px) {
   .px-video-controls button.px-video-restart {
     background-position: -9px -523px;
@@ -204,57 +179,49 @@
 }
 @media only screen and (min-width: 620px) {
   .px-video-controls button.px-video-restart:hover,
-.px-video-controls button.px-video-restart:focus {
+  .px-video-controls button.px-video-restart:focus {
     background-position: -9px -466px;
   }
 }
 .px-video-controls button.px-video-rewind {
   background-position: -9px -187px;
 }
-
 .px-video-controls button.px-video-rewind:hover,
 .px-video-controls button.px-video-rewind:focus {
   background-position: -9px -151px;
 }
-
 @media only screen and (min-width: 620px) {
   .px-video-controls button.px-video-rewind {
     background-position: -9px -295px;
   }
-
   .px-video-controls button.px-video-rewind:hover,
-.px-video-controls button.px-video-rewind:focus {
+  .px-video-controls button.px-video-rewind:focus {
     background-position: -9px -238px;
   }
 }
 .px-video-controls button.px-video-play {
   background-position: -8px -43px;
 }
-
 .px-video-controls button.px-video-play:hover,
 .px-video-controls button.px-video-play:focus {
   background-position: -8px -7px;
 }
-
 @media only screen and (min-width: 620px) {
   .px-video-controls button.px-video-play {
     background-position: -8px -67px;
   }
-
   .px-video-controls button.px-video-play:hover,
-.px-video-controls button.px-video-play:focus {
+  .px-video-controls button.px-video-play:focus {
     background-position: -8px -10px;
   }
 }
 .px-video-controls button.px-video-pause {
   background-position: -9px -115px;
 }
-
 .px-video-controls button.px-video-pause:hover,
 .px-video-controls button.px-video-pause:focus {
   background-position: -9px -79px;
 }
-
 @media only screen and (min-width: 620px) {
   .px-video-controls button.px-video-pause {
     background-position: -9px -182px;
@@ -262,26 +229,23 @@
 }
 @media only screen and (min-width: 620px) {
   .px-video-controls button.px-video-pause:hover,
-.px-video-controls button.px-video-pause:focus {
+  .px-video-controls button.px-video-pause:focus {
     background-position: -9px -124px;
   }
 }
 .px-video-controls button.px-video-forward {
   background-position: -10px -259px;
 }
-
 .px-video-controls button.px-video-forward:hover,
 .px-video-controls button.px-video-forward:focus {
   background-position: -10px -223px;
 }
-
 @media only screen and (min-width: 620px) {
   .px-video-controls button.px-video-forward {
     background-position: -10px -409px;
   }
-
   .px-video-controls button.px-video-forward:hover,
-.px-video-controls button.px-video-forward:focus {
+  .px-video-controls button.px-video-forward:focus {
     background-position: -10px -352px;
   }
 }
@@ -289,7 +253,6 @@
   float: left;
   width: 25px;
 }
-
 .px-video-fullscreen-btn-container label {
   display: inline-block;
   width: 25px;
@@ -299,38 +262,32 @@
   background: no-repeat url("../images/px-video-sprite.svg");
   background-position: -6px -943px;
 }
-
 @media only screen and (min-width: 540px) {
   .px-video-fullscreen-btn-container label {
     margin-top: 5px;
   }
 }
-.px-video-fullscreen-btn-container input[type=checkbox]:focus + label {
+
+.px-video-fullscreen-btn-container input[type="checkbox"]:focus+label {
   background-position: -6px -907px;
 }
-
-.px-video-fullscreen-btn-container input[type=checkbox]:hover + label {
+.px-video-fullscreen-btn-container input[type="checkbox"]:hover+label {
   background-position: -6px -907px;
   cursor: pointer;
 }
-
-.px-video-fullscreen-btn-container input[type=checkbox]:focus + label {
+.px-video-fullscreen-btn-container input[type="checkbox"]:focus+label {
   background-position: -6px -907px;
 }
-
-.px-video-fullscreen-btn-container input[type=checkbox]:checked + label {
+.px-video-fullscreen-btn-container input[type="checkbox"]:checked+label {
   background-position: -6px -979px;
 }
-
-.px-video-fullscreen-btn-container input[type=checkbox]:checked:hover + label {
+.px-video-fullscreen-btn-container input[type="checkbox"]:checked:hover+label {
   background-position: -6px -1015px;
 }
-
 .px-video-captions-btn-container {
   float: left;
   position: relative;
 }
-
 .px-video-captions-submenu {
   display: none;
   position: absolute;
@@ -343,16 +300,13 @@
   list-style-type: none;
   white-space: nowrap;
 }
-
 .px-video-captions-submenu li {
   cursor: pointer;
   padding: 8px 16px;
 }
-
 .px-video-captions-submenu li:hover {
   background-color: #e6e6e6;
 }
-
 .px-video-captions-submenu li:focus {
   background-color: #e6e6e6;
   outline: 1px #999 dotted;
@@ -363,17 +317,14 @@
   background-color: #009cdf;
   color: #ffffff;
 }
-
 .px-video-captions-submenu li:before {
-  content: "";
+  content: '';
   width: 20px;
   display: inline-block;
 }
-
 .px-video-captions-submenu li.selected:before {
-  content: "✓";
+  content: '\2713';
 }
-
 .px-video-captions-btn-container label,
 .px-video-captions-btn-container button.px-video-btnCaptions {
   display: inline-block;
@@ -385,33 +336,29 @@
   border: none;
   vertical-align: middle;
 }
-
 @media only screen and (min-width: 540px) {
   .px-video-captions-btn-container {
     clear: none;
     margin-top: 1px;
     margin-left: 10px;
   }
-
   .px-video-captions-btn-container label,
-.px-video-captions-btn-container button.px-video-btnCaptions {
+  .px-video-captions-btn-container button.px-video-btnCaptions {
     margin-top: 4px;
   }
 }
-.px-video-captions-btn-container input[type=checkbox]:hover + label,
+.px-video-captions-btn-container input[type="checkbox"]:hover+label,
 .px-video-captions-btn-container button:hover {
   background-position: -6px -799px;
   cursor: pointer;
 }
-
-.px-video-captions-btn-container input[type=checkbox]:focus + label,
+.px-video-captions-btn-container input[type="checkbox"]:focus+label,
 .px-video-captions-btn-container button:focus {
   border: none;
   outline: 1px #999 dotted;
   background-position: -6px -799px;
 }
-
-.px-video-captions-btn-container input[type=checkbox]:checked + label,
+.px-video-captions-btn-container input[type="checkbox"]:checked+label,
 .px-video-captions-btn-container button.selected {
   background-position: -6px -871px;
 }
@@ -421,7 +368,6 @@
   overflow: visible;
   min-width: 133px;
 }
-
 @media only screen and (min-width: 540px) {
   .px-video-volume-controls {
     margin-top: 1px;
@@ -431,7 +377,6 @@
   float: left;
   width: 26px;
 }
-
 .px-video-mute-btn-container label {
   display: inline-block;
   width: 25px;
@@ -440,39 +385,32 @@
   background: no-repeat url("../images/px-video-sprite.svg");
   background-position: -6px -476px;
 }
-
 @media only screen and (min-width: 540px) {
   .px-video-mute-btn-container label {
     margin-top: 6px;
   }
 }
-.px-video-mute-btn-container input[type=checkbox]:focus + label {
+.px-video-mute-btn-container input[type="checkbox"]:focus+label {
   background-position: -6px -440px;
 }
-
-.px-video-mute-btn-container input[type=checkbox]:hover + label {
+.px-video-mute-btn-container input[type="checkbox"]:hover+label {
   background-position: -6px -440px;
   cursor: pointer;
 }
-
-.px-video-mute-btn-container input[type=checkbox]:focus + label {
+.px-video-mute-btn-container input[type="checkbox"]:focus+label {
   background-position: -6px -440px;
 }
-
-.px-video-mute-btn-container input[type=checkbox]:checked + label {
+.px-video-mute-btn-container input[type="checkbox"]:checked+label {
   background-position: -6px -692px;
 }
-
-.px-video-mute-btn-container input[type=checkbox]:checked:hover + label,
-.px-video-mute-btn-container input[type=checkbox]:checked:focus + label {
+.px-video-mute-btn-container input[type="checkbox"]:checked:hover+label,
+.px-video-mute-btn-container input[type="checkbox"]:checked:focus+label {
   background-position: -6px -656px;
 }
-
 .px-video-volume-slider {
   float: left;
   width: 80px;
 }
-
 @media only screen and (min-width: 540px) {
   .px-video-volume-slider {
     width: 95px;
@@ -487,34 +425,31 @@
   margin-left: 5px;
   background-color: #e6e6e6;
 }
-
 @media only screen and (min-width: 540px) {
   .px-video-controls .px-video-volume {
     margin-top: 12px;
     width: 85px;
   }
 }
+
 .px-video-controls .px-video-volume::-moz-range-track {
   -moz-appearance: none;
   height: 6px;
   background-color: #e6e6e6;
   border: none;
 }
-
 .px-video-controls .px-video-volume::-webkit-slider-thumb {
   -webkit-appearance: none !important;
   height: 10px;
   width: 6px;
   background-color: #666;
 }
-
 .px-video-controls .px-video-volume::-moz-range-thumb {
   background-color: #666;
   border: none;
   height: 12px;
   width: 8px;
 }
-
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .px-video-controls .px-video-volume {
     position: relative;
@@ -522,11 +457,9 @@
     height: 8px;
     top: -3px;
   }
-
   .px-video-controls .px-video-time {
     margin-top: 4px;
   }
-
   .px-video-controls .px-video-captions {
     padding: 8px;
     min-height: 36px;
@@ -540,12 +473,10 @@
   align-items: center;
   align-content: center;
 }
-
 .progress-bar {
   flex-grow: 1;
   width: 75%;
 }
-
 @media only screen and (min-width: 480px) {
   .progress-bar {
     width: 75%;
@@ -566,79 +497,10 @@
     width: 85%;
   }
 }
-.px-video-progress[type=range] {
-  --range: calc(var(--max) - var(--min));
-  --ratio: calc((var(--val) - var(--min))/var(--range));
-  --sx: calc(.5*10px + var(--ratio)*(100% - 10px));
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 10px;
-  background: transparent;
-  font: 1em/1 arial, sans-serif;
-}
-.px-video-progress[type=range], .px-video-progress[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-}
-.px-video-progress[type=range]::-webkit-slider-runnable-track {
-  box-sizing: border-box;
-  border: none;
-  width: 100%;
-  height: 10px;
-  background: #e6e6e6;
-  background: linear-gradient(#449bd9, #449bd9) 0/var(--sx) 100% no-repeat #e6e6e6;
-}
-.px-video-progress[type=range]::-moz-range-track {
-  box-sizing: border-box;
-  border: none;
-  width: 100%;
-  height: 10px;
-  background: #e6e6e6;
-}
-.px-video-progress[type=range]::-ms-track {
-  box-sizing: border-box;
-  border: none;
-  width: 100%;
-  height: 10px;
-  background: #e6e6e6;
-}
-.px-video-progress[type=range]::-moz-range-progress {
-  height: 10px;
-  background: #449bd9;
-}
-.px-video-progress[type=range]::-ms-fill-lower {
-  height: 10px;
-  background: #449bd9;
-}
-.px-video-progress[type=range]::-webkit-slider-thumb {
-  margin-top: 0px;
-  box-sizing: border-box;
-  border: none;
-  width: 10px;
-  height: 10px;
-  background: #58b9ed;
-}
-.px-video-progress[type=range]::-moz-range-thumb {
-  box-sizing: border-box;
-  border: none;
-  width: 10px;
-  height: 10px;
-  background: #58b9ed;
-}
-.px-video-progress[type=range]::-ms-thumb {
-  margin-top: 0;
-  box-sizing: border-box;
-  border: none;
-  width: 10px;
-  height: 10px;
-  background: #58b9ed;
-}
-.px-video-progress[type=range]::-ms-tooltip {
-  display: none;
-}
-.px-video-progress[type=range]::-ms-track {
-  color: transparent;
-}
+
+
+@import "scrubber";
+
 
 .px-video-time {
   flex-grow: 0;
@@ -646,12 +508,10 @@
   padding-left: 10px;
   margin-top: 0;
 }
-
 .px-video-playback-buttons {
   flex-grow: 1;
   min-width: auto;
 }
-
 @media only screen and (min-width: 620px) {
   .px-video-playback-buttons {
     left: auto;
@@ -676,15 +536,11 @@
 .px-video-controls button {
   margin: 0 5px;
 }
-
 .px-video-volume-controls {
   min-width: auto;
 }
-
 @media only screen and (min-width: 540px) {
   .px-video-volume-controls {
     margin-top: 0;
   }
 }
-
-/*# sourceMappingURL=px-video.css.map */

@@ -1,0 +1,67 @@
+$track-w: 100%;
+$track-h: 10px;
+$thumb-d: 10px;
+$track-c: rgb(230,230,230);
+$filll-c: rgb(68, 155, 217);
+
+@mixin track($fill: 0) {
+	box-sizing: border-box;
+	border: none;
+	width: $track-w; height: $track-h;
+	background: $track-c;
+	
+	@if $fill == 1 {
+		background: linear-gradient($filll-c, $filll-c)
+				0/ var(--sx) 100% no-repeat $track-c
+	}
+}
+
+@mixin fill() {
+	height: $track-h;
+	background: $filll-c
+}
+
+@mixin thumb() {
+	box-sizing: border-box;
+	border: none;
+	width: $thumb-d; height: $thumb-d;
+	background: rgb(88, 185, 237);
+}
+
+.px-video-progress[type='range'] {
+	&, &::-webkit-slider-thumb {
+		-webkit-appearance: none;
+	}
+	
+	--range: calc(var(--max) - var(--min));
+	--ratio: calc((var(--val) - var(--min))/var(--range));
+	--sx: calc(.5*#{$thumb-d} + var(--ratio)*(100% - #{$thumb-d}));
+	margin: 0;
+	padding: 0;
+	width: $track-w; height: $thumb-d;
+	background: transparent;
+	font: 1em/1 arial, sans-serif;
+	
+	&::-webkit-slider-runnable-track {
+		@include track(1)
+	}
+	&::-moz-range-track { @include track }
+	&::-ms-track { @include track }
+	
+	&::-moz-range-progress { @include fill }
+	&::-ms-fill-lower { @include fill }
+	
+	&::-webkit-slider-thumb {
+		margin-top: .5*($track-h - $thumb-d);
+		@include thumb
+	}
+	&::-moz-range-thumb { @include thumb }
+	&::-ms-thumb {
+		margin-top: 0;
+		@include thumb
+	}
+	
+	&::-ms-tooltip { display: none }
+
+	&::-ms-track { color: transparent }
+}
